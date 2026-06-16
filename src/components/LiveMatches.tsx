@@ -49,7 +49,7 @@ export function MatchCard({ m }: { m: Match }) {
 }
 
 export function LiveMatches() {
-  const { matches } = useData();
+  const { matches, ready } = useData();
   const live = matches.filter((m) => m.status === "live" || m.status === "ht");
   const rest = matches.filter((m) => m.status !== "live" && m.status !== "ht");
   const show = [...live, ...rest].slice(0, 6);
@@ -63,8 +63,33 @@ export function LiveMatches() {
         <a href="#" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">View All Live →</a>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {show.map((m, i) => <MatchCard key={i} m={m} />)}
+        {ready
+          ? show.map((m, i) => <MatchCard key={i} m={m} />)
+          : Array.from({ length: 4 }).map((_, i) => <MatchCardSkeleton key={i} />)}
       </div>
     </section>
+  );
+}
+
+function MatchCardSkeleton() {
+  return (
+    <div className="card-surface p-4 flex flex-col gap-3 animate-pulse">
+      <div className="flex items-center justify-between">
+        <div className="h-3 w-16 rounded bg-border" />
+        <div className="h-5 w-12 rounded-md bg-border" />
+      </div>
+      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <div className="flex items-center gap-2">
+          <div className="h-9 w-9 rounded-full bg-border" />
+          <div className="h-3.5 w-20 rounded bg-border" />
+        </div>
+        <div className="h-7 w-10 rounded bg-border mx-auto" />
+        <div className="flex items-center gap-2 justify-end">
+          <div className="h-3.5 w-20 rounded bg-border" />
+          <div className="h-9 w-9 rounded-full bg-border" />
+        </div>
+      </div>
+      <div className="h-3 w-28 rounded bg-border" />
+    </div>
   );
 }

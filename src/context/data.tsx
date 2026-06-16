@@ -10,6 +10,7 @@ type DataShape = {
   scorers: Scorer[];
   bestPlayer: BestPlayerT;
   live: boolean;
+  ready: boolean;
 };
 
 const fallback: DataShape = {
@@ -18,6 +19,7 @@ const fallback: DataShape = {
   scorers: mock.scorers as Scorer[],
   bestPlayer: mock.bestPlayer as BestPlayerT,
   live: false,
+  ready: false,
 };
 
 const DataContext = createContext<DataShape>(fallback);
@@ -50,8 +52,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
           else { next.scorers = []; next.bestPlayer = EMPTY_BEST as BestPlayerT; } // live but no goals yet
         }
         next.live = any;
+        next.ready = true;
         setData(next);
-      } catch { /* keep fallback / demo data */ }
+      } catch {
+        // API unreachable: keep demo data, but clear the loading state so the
+        // matches area shows the demo cards instead of skeletons forever.
+        if (on) setData((d) => ({ ...d, ready: true }));
+      }
     };
     load();
     const id = setInterval(load, 60_000);
