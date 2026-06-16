@@ -1,4 +1,5 @@
 import { useData } from "@/context/data";
+import { Link } from "react-router-dom";
 import { Flag } from "@/components/Flag";
 import type { StandingRow } from "@/lib/types";
 
@@ -56,7 +57,7 @@ export function GroupStandings({ limit }: { limit?: number }) {
       <div className="flex items-center justify-between mb-3">
         <h3 className="headline text-xl">Group Standings</h3>
         {limit && (
-          <a href="/table" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">All Groups →</a>
+          <Link to="/table" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">All Groups →</Link>
         )}
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">

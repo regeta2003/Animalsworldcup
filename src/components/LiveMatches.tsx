@@ -1,5 +1,6 @@
 import { TeamAvatar } from "./TeamAvatar";
 import { Radio } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useData } from "@/context/data";
 import type { Match } from "@/lib/types";
 
@@ -60,7 +61,7 @@ export function LiveMatches() {
           <Radio className="h-5 w-5 text-live" />
           Live Matches <span className="live-dot ml-1" />
         </h3>
-        <a href="#" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">View All Live →</a>
+        <Link to="/live" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">View All Live →</Link>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {ready

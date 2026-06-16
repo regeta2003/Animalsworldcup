@@ -1,8 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
-import { Search, Globe, Maximize2, Menu, X } from "lucide-react";
+import { Search, Maximize2, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import logo from "@/assets/logo.png";
 import wordmark from "@/assets/wordmark.png";
+import { SearchOverlay } from "./SearchOverlay";
 
 const NAV: Array<{ to: string; label: string; exact?: boolean; live?: boolean }> = [
   { to: "/", label: "Home", exact: true },
@@ -15,7 +16,7 @@ const NAV: Array<{ to: string; label: string; exact?: boolean; live?: boolean }>
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
-  const [lang, setLang] = useState("EN");
+  const [searchOpen, setSearchOpen] = useState(false);
   const pathname = useLocation().pathname;
 
   useEffect(() => setOpen(false), [pathname]);
@@ -61,16 +62,8 @@ export function SiteHeader() {
         </nav>
 
         <div className="ml-auto flex items-center gap-1.5">
-          <button aria-label="Search" className="h-9 w-9 grid place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">
+          <button onClick={() => setSearchOpen(true)} aria-label="Search" className="h-9 w-9 grid place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">
             <Search className="h-[18px] w-[18px]" />
-          </button>
-          <button
-            onClick={() => setLang(lang === "EN" ? "ES" : lang === "ES" ? "DE" : "EN")}
-            className="h-9 px-2.5 inline-flex items-center gap-1 rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition text-xs font-display font-semibold"
-            aria-label="Language"
-          >
-            <Globe className="h-4 w-4" />
-            {lang}
           </button>
           <button onClick={toggleFullscreen} aria-label="Fullscreen" className="hidden sm:grid h-9 w-9 place-items-center rounded-lg text-white/70 hover:bg-white/10 hover:text-white transition">
             <Maximize2 className="h-[18px] w-[18px]" />
@@ -102,6 +95,7 @@ export function SiteHeader() {
           </nav>
         </div>
       )}
+      {searchOpen && <SearchOverlay onClose={() => setSearchOpen(false)} />}
     </header>
   );
 }

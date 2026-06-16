@@ -1,6 +1,7 @@
 import { Star, ArrowRight } from "lucide-react";
 import { useData } from "@/context/data";
 import { Flag } from "@/components/Flag";
+import { Link } from "react-router-dom";
 
 export function BestPlayer() {
   const { bestPlayer } = useData();
@@ -40,9 +41,9 @@ export function BestPlayer() {
               </div>
             ))}
           </div>
-          <button className="mt-4 w-full inline-flex items-center justify-center gap-1.5 bg-pitch text-white py-2.5 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:bg-primary-deep transition">
+          <Link to="/statistics" className="mt-4 w-full inline-flex items-center justify-center gap-1.5 bg-pitch text-white py-2.5 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:bg-primary-deep transition">
             View Profile <ArrowRight className="h-3.5 w-3.5" />
-          </button>
+          </Link>
         </div>
       ) : (
         <div className="p-6 text-center">

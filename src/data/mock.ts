@@ -138,11 +138,31 @@ export const bestPlayer = {
 };
 
 export const news = [
-  { tag: "MATCH",    title: "Eagle soars past Elephant in a five-goal thriller in Mexico City", source: "AW News",  time: "12m ago" },
-  { tag: "TRANSFER", title: "Condor's young midfield maestro linked with European giants",       source: "Reuters",  time: "1h ago" },
-  { tag: "TACTICS",  title: "Why the Parrot's high press could shape the knockout rounds",       source: "The Pitch", time: "2h ago" },
-  { tag: "INJURY",   title: "Lions captain ruled out of next fixture with hamstring strain",     source: "AW News",  time: "3h ago" },
-  { tag: "OPINION",  title: "Five mascots who have lit up the group stage so far",               source: "Editor",   time: "5h ago" },
+  { tag: "MATCH",    title: "Eagle soars past Elephant in a five-goal thriller in Mexico City", source: "AW News",  time: "12m ago", body: [
+    "It was a night that will be remembered in Mexico City for a long time. The Eagle came flying out of the blocks and never looked back, turning an even contest into a statement win in front of a roaring crowd.",
+    "Two goals inside the opening fifteen minutes set the tone, and although the Elephant pulled one back before the break, the response was emphatic. Quick, direct and ruthless in front of goal, the Eagle controlled the tempo through the middle third and punished every lapse.",
+    "The result lifts them clear at the top of the group and sends an early warning to the rest of the field heading into the knockout rounds.",
+  ] },
+  { tag: "TRANSFER", title: "Condor's young midfield maestro linked with European giants", source: "Reuters",  time: "1h ago", body: [
+    "The standout performer of the group stage so far is attracting serious attention. Scouts from several of the continent's biggest clubs were in the stands again last night, and the interest is no longer a secret.",
+    "At just twenty-one, the midfielder has combined energy with composure, dictating play and chipping in with crucial goals. Sources suggest preliminary conversations have already taken place.",
+    "For now the focus remains on the tournament, but a breakout summer move looks increasingly likely.",
+  ] },
+  { tag: "TACTICS",  title: "Why the Parrot's high press could shape the knockout rounds", source: "The Pitch", time: "2h ago", body: [
+    "Few teams have been as fun to watch as the Parrot, and the reason is a relentless, well-drilled press that suffocates opponents the moment they try to build from the back.",
+    "It is a high-risk approach that demands enormous fitness and precise timing, but when it clicks it forces errors in dangerous areas and creates chances out of nothing.",
+    "If they can sustain that intensity over ninety minutes, the Parrot could be the side nobody wants to draw.",
+  ] },
+  { tag: "INJURY",   title: "Lions captain ruled out of next fixture with hamstring strain", source: "AW News",  time: "3h ago", body: [
+    "There was concern in the camp after the Lions captain limped off late in the second half. Scans have since confirmed a hamstring strain that will keep the talismanic leader out of the next fixture.",
+    "It is a blow for a side that leans heavily on its captain for organisation and leadership at the back. The coaching staff remain hopeful of a return before the knockout stage.",
+    "In the meantime, the squad will be tested on its depth at a crucial moment of the tournament.",
+  ] },
+  { tag: "OPINION",  title: "Five mascots who have lit up the group stage so far", source: "Editor",   time: "5h ago", body: [
+    "The group stage always throws up a few surprises, and this tournament has been no different. From breakout stars to unexpected heroes, here are the five mascots who have caught the eye.",
+    "Some have dazzled with flair, others with sheer determination, but all five have given their fans something to celebrate and plenty of reason for optimism heading into the next round.",
+    "As the competition heats up, expect these names to keep making headlines.",
+  ] },
 ];
 
 export const highlights = [

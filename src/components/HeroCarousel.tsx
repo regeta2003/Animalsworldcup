@@ -40,19 +40,19 @@ export function HeroCarousel() {
             <div className="absolute -right-10 -bottom-10 w-[70%] h-[120%] opacity-[0.06]" style={{ background: `radial-gradient(closest-side, ${s.color}, transparent)` }} />
 
             <div className="relative h-full grid grid-cols-1 md:grid-cols-2 items-center px-6 sm:px-10">
-              <div className="z-10 max-w-xl fade-in">
+              <div className="z-10 max-w-xl fade-in pr-[42%] md:pr-0">
                 <span className="eyebrow inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-gold text-gold-foreground">
                   ★ {s.tag}
                 </span>
-                <h2 className="headline hero-legible mt-4 text-[34px] sm:text-[44px] lg:text-[52px] text-ink">
+                <h2 className="headline hero-legible mt-4 text-[26px] sm:text-[34px] md:text-[44px] lg:text-[52px] text-ink">
                   {s.title}
                 </h2>
-                <p className="hero-legible mt-3 text-muted-foreground text-[15px] max-w-md">{s.sub}</p>
+                <p className="hero-legible mt-3 text-muted-foreground text-[13px] sm:text-[15px] max-w-md">{s.sub}</p>
               </div>
               <div className="absolute right-0 inset-y-0 w-1/2 hidden md:block">
                 <img src={s.img} alt="" className="h-full w-full object-contain object-bottom-right scale-110" />
               </div>
-              <div className="md:hidden absolute right-0 bottom-0 w-2/3 h-3/4 opacity-90">
+              <div className="md:hidden absolute right-0 bottom-0 w-[40%] h-[64%] opacity-95">
                 <img src={s.img} alt="" className="h-full w-full object-contain object-bottom-right" />
               </div>
             </div>

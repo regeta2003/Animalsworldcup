@@ -1,5 +1,6 @@
 import { TeamAvatar } from "./TeamAvatar";
 import { useData } from "@/context/data";
+import { Link } from "react-router-dom";
 
 export function TopScorers() {
   const { scorers } = useData();
@@ -7,7 +8,7 @@ export function TopScorers() {
     <section>
       <div className="flex items-center justify-between mb-3">
         <h3 className="headline text-xl">Top Scorers</h3>
-        <a href="/statistics" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">Full List →</a>
+        <Link to="/statistics" className="text-pitch font-display font-bold text-xs uppercase tracking-widest hover:underline">Full List →</Link>
       </div>
       <div className="card-surface p-2 sm:p-3 grid grid-cols-1 md:grid-cols-2 gap-1.5">
         {scorers.length === 0 && (
