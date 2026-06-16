@@ -1,4 +1,4 @@
-import { mascotFor, colorFor, metaFor, codeFor } from "./mascots";
+import { mascotFor, colorFor, metaFor, codeFor, flagUrl } from "./mascots";
 
 const roundGroup = (round = ""): string =>
   (round.match(/Group\s+([A-L])\b/i)?.[1]?.toUpperCase() || "");
@@ -52,8 +52,8 @@ export function shapeMatches(json: any, teamGroup: Record<string, string> = {}) 
       date: f.fixture?.date,
       status,
       clock: (f.fixture?.status?.elapsed ?? 0) + "'",
-      homeImg: hm?.img ?? null,
-      awayImg: am?.img ?? null,
+      homeImg: hm?.img ?? (flagUrl(codeFor(homeReal)) || null),
+      awayImg: am?.img ?? (flagUrl(codeFor(awayReal)) || null),
     };
   });
 }
