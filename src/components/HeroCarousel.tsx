@@ -52,8 +52,8 @@ export function HeroCarousel() {
               <div className="absolute right-0 inset-y-0 w-1/2 hidden md:block">
                 <img src={s.img} alt="" className="h-full w-full object-contain object-bottom-right scale-110" />
               </div>
-              <div className="md:hidden absolute right-0 bottom-0 w-[40%] h-[64%] opacity-95">
-                <img src={s.img} alt="" className="h-full w-full object-contain object-bottom-right" />
+              <div className="md:hidden absolute right-0 bottom-0 w-[42%] h-[70%] opacity-95">
+                <img src={s.img} alt="" className="h-full w-full object-contain object-[right_bottom]" />
               </div>
             </div>
           </div>
