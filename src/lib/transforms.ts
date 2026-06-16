@@ -71,7 +71,7 @@ export function shapeScorers(json: any) {
       goals: st.goals?.total ?? 0,
       assists: st.goals?.assists ?? 0,
       rating: st.games?.rating ? Number(st.games.rating) : 0,
-      img: m?.img ?? null,
+      img: m?.img ?? (flagUrl(codeFor(real)) || null),
     };
   });
 }
