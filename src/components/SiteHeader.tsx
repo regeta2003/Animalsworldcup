@@ -28,11 +28,11 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 bg-[#1a1a1a] border-b border-white/10">
-      <div className="mx-auto max-w-[1400px] px-4 lg:px-6 h-16 flex items-center gap-4">
-        <Link to="/" className="flex items-center gap-2.5 shrink-0">
-          <img src={logo} alt="Animals World Cup" className="h-10 w-10 rounded-full object-contain" />
-          <img src={wordmark} alt="Animals' World Cup" className="h-8 w-auto hidden sm:block" />
-          <span className="font-display font-extrabold text-[11px] px-1.5 py-0.5 rounded-md bg-gold text-gold-foreground leading-none">2026</span>
+      <div className="mx-auto max-w-[1400px] px-4 lg:px-6 h-20 flex items-center gap-4">
+        <Link to="/" className="flex items-center gap-3 shrink-0">
+          <img src={logo} alt="Animals World Cup" className="h-14 w-14 rounded-full object-contain" />
+          <img src={wordmark} alt="Animals' World Cup" className="h-12 w-auto hidden sm:block" />
+          <span className="font-display font-extrabold text-sm px-2 py-1 rounded-md bg-gold text-gold-foreground leading-none">2026</span>
         </Link>
 
         <nav className="hidden lg:flex items-center gap-1 ml-6">
@@ -42,7 +42,7 @@ export function SiteHeader() {
               <Link
                 key={item.to}
                 to={item.to}
-                className={`relative px-3 py-2 text-sm font-display font-semibold uppercase tracking-wider transition-colors ${
+                className={`relative px-3 py-2 text-[15px] font-display font-bold uppercase tracking-wider transition-colors ${
                   active ? "text-white" : "text-white/55 hover:text-white"
                 }`}
               >
@@ -51,7 +51,7 @@ export function SiteHeader() {
                   {item.live && <span className="live-dot" />}
                 </span>
                 <span
-                  className={`absolute left-3 right-3 -bottom-px h-[3px] rounded-full bg-gold transition-all ${
+                  className={`absolute left-3 right-3 -bottom-px h-1 rounded-full bg-gold transition-all ${
                     active ? "opacity-100" : "opacity-0"
                   }`}
                 />

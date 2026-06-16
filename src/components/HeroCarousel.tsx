@@ -44,10 +44,10 @@ export function HeroCarousel() {
                 <span className="eyebrow inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-gold text-gold-foreground">
                   ★ {s.tag}
                 </span>
-                <h2 className="headline mt-4 text-[34px] sm:text-[44px] lg:text-[52px] text-ink">
+                <h2 className="headline hero-legible mt-4 text-[34px] sm:text-[44px] lg:text-[52px] text-ink">
                   {s.title}
                 </h2>
-                <p className="mt-3 text-muted-foreground text-[15px] max-w-md">{s.sub}</p>
+                <p className="hero-legible mt-3 text-muted-foreground text-[15px] max-w-md">{s.sub}</p>
               </div>
               <div className="absolute right-0 inset-y-0 w-1/2 hidden md:block">
                 <img src={s.img} alt="" className="h-full w-full object-contain object-bottom-right scale-110" />
