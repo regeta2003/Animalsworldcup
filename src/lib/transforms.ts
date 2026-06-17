@@ -93,7 +93,7 @@ export function deriveBestPlayer(json: any) {
     goals: st.goals?.total ?? 0,
     assists: st.goals?.assists ?? 0,
     rating: st.games?.rating ? Number(st.games.rating) : 0,
-    img: m?.img ?? p.player?.photo ?? null,
+    img: m?.img ?? null,
   };
 }
 export { EMPTY_BEST };

@@ -5,13 +5,14 @@ import logo from "@/assets/logo.png";
 import wordmark from "@/assets/wordmark.png";
 import { SearchOverlay } from "./SearchOverlay";
 
-const NAV: Array<{ to: string; label: string; exact?: boolean; live?: boolean }> = [
+const NAV: Array<{ to: string; label: string; exact?: boolean; live?: boolean; external?: boolean }> = [
   { to: "/", label: "Home", exact: true },
   { to: "/teams", label: "Teams" },
   { to: "/table", label: "Table" },
   { to: "/schedule", label: "Schedule" },
   { to: "/statistics", label: "Statistics" },
   { to: "/live", label: "Live", live: true },
+  { to: "https://www.instagram.com/animalsworldcup", label: "Contact", external: true },
 ];
 
 export function SiteHeader() {
@@ -38,15 +39,12 @@ export function SiteHeader() {
 
         <nav className="hidden lg:flex items-center gap-1 ml-6">
           {NAV.map((item) => {
-            const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`relative px-3 py-2 text-[15px] font-display font-bold uppercase tracking-wider transition-colors ${
-                  active ? "text-white" : "text-white/55 hover:text-white"
-                }`}
-              >
+            const active = item.external ? false : item.exact ? pathname === item.to : pathname.startsWith(item.to);
+            const cls = `relative px-3 py-2 text-[15px] font-display font-bold uppercase tracking-wider transition-colors ${
+              active ? "text-white" : "text-white/55 hover:text-white"
+            }`;
+            const inner = (
+              <>
                 <span className="inline-flex items-center gap-1.5">
                   {item.label}
                   {item.live && <span className="live-dot" />}
@@ -56,7 +54,12 @@ export function SiteHeader() {
                     active ? "opacity-100" : "opacity-0"
                   }`}
                 />
-              </Link>
+              </>
+            );
+            return item.external ? (
+              <a key={item.to} href={item.to} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+            ) : (
+              <Link key={item.to} to={item.to} className={cls}>{inner}</Link>
             );
           })}
         </nav>
@@ -78,18 +81,20 @@ export function SiteHeader() {
         <div className="lg:hidden border-t border-white/10 bg-[#1a1a1a]">
           <nav className="px-4 py-2 flex flex-col">
             {NAV.map((item) => {
-              const active = item.exact ? pathname === item.to : pathname.startsWith(item.to);
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`py-3 px-2 rounded-lg font-display font-semibold uppercase tracking-wider text-sm flex items-center gap-2 ${
-                    active ? "text-gold bg-white/10" : "text-white/80"
-                  }`}
-                >
+              const active = item.external ? false : item.exact ? pathname === item.to : pathname.startsWith(item.to);
+              const cls = `py-3 px-2 rounded-lg font-display font-semibold uppercase tracking-wider text-sm flex items-center gap-2 ${
+                active ? "text-gold bg-white/10" : "text-white/80"
+              }`;
+              const inner = (
+                <>
                   {item.label}
                   {item.live && <span className="live-dot" />}
-                </Link>
+                </>
+              );
+              return item.external ? (
+                <a key={item.to} href={item.to} target="_blank" rel="noopener noreferrer" className={cls}>{inner}</a>
+              ) : (
+                <Link key={item.to} to={item.to} className={cls}>{inner}</Link>
               );
             })}
           </nav>
