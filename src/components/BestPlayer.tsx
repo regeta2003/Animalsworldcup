@@ -14,9 +14,13 @@ export function BestPlayer() {
           <span className="eyebrow opacity-80">Best Player of the Day</span>
           <h3 className="headline text-xl mt-1">Today's MVP</h3>
         </div>
-        {hasData && bestPlayer.img && (
+        {hasData && bestPlayer.img ? (
           <img src={bestPlayer.img} alt={bestPlayer.name} className="absolute -bottom-2 right-0 h-40 object-contain object-bottom-right" />
-        )}
+        ) : hasData && bestPlayer.flag ? (
+          <div className="absolute -bottom-3 right-5 h-24 w-24 rounded-full overflow-hidden ring-4 ring-white/40 shadow-xl">
+            <Flag code={bestPlayer.flag} className="h-full w-full" />
+          </div>
+        ) : null}
       </div>
 
       {hasData ? (
