@@ -4,12 +4,15 @@ import eagle from "@/assets/germany.png";
 import elephant from "@/assets/ivory.png";
 import condor from "@/assets/ecuador.png";
 import parrot from "@/assets/curacao.png";
+import Turkeylost from "@/assets/Turkeylost.png";
+
 
 export const images = {
   eagle,
   elephant,
   condor,
   parrot,
+  Turkeylost,
 };
 
 export const featuredTeams = [
@@ -176,7 +179,7 @@ export const highlights = [
 
 export const topStories = [
   { tag: "TOP STORY", title: "Eagle take flight: Germany's mascots top Group E",   sub: "Two goals in eight minutes set up a statement win in Mexico City.", img: images.eagle,    color: "#0B8A3D" },
-  { tag: "TOP STORY", title: "Elephants charge into the knockouts",                 sub: "Ivory Coast's mascots clinch second place with grit and goals.",   img: images.elephant, color: "#F77F00" },
+  { tag: "TOP STORY", title: "Turkish wolves are sad",                              sub: "Turkey lost its first match.",   img: images.Turkeylost, color: "#F77F00" },
   { tag: "TOP STORY", title: "Condor circles a historic last-16 spot",              sub: "Ecuador's mascots show the world what altitude really means.",     img: images.condor,   color: "#EAB308" },
   { tag: "TOP STORY", title: "Parrot's late show electrifies the group",            sub: "Curaçao's debutants steal the night with a stoppage-time strike.", img: images.parrot,   color: "#0B6BCB" },
 ];
