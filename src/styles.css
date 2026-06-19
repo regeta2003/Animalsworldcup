@@ -49,11 +49,11 @@
 }
 
 :root {
-  --background: oklch(1 0 0);                   /* #FFFFFF */
+  --background: oklch(79.319% 0.1579 90.594);                   /* #FFFFFF */
   --soft: oklch(0.972 0.003 247);               /* #F4F6F8 */
   --foreground: oklch(0.18 0.02 260);           /* near #11161F */
   --ink: oklch(0.18 0.02 260);
-  --card: oklch(1 0 0);
+  --card: oklch(81.204% 0.20981 149.039);
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
