@@ -53,7 +53,7 @@
   --soft: oklch(0.972 0.003 247);               /* #F4F6F8 */
   --foreground: oklch(0.18 0.02 260);           /* near #11161F */
   --ink: oklch(0.18 0.02 260);
-  --card: oklch(81.204% 0.20981 149.039);
+  --card: oklch(52.309% 0.00194 146.977);
   --card-foreground: var(--foreground);
   --popover: oklch(1 0 0);
   --popover-foreground: var(--foreground);
