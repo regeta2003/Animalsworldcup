@@ -32,13 +32,22 @@ and swaps to live data the moment the key is configured.
 
 > The key MUST be set in Vercel. Vercel does not read the local `.env` in production.
 
-## Admin dashboard (`/admin`)
+## Admin visual editor (`/admin`)
 
-A password-protected dashboard at `/admin` lets you override player pictures, team
-flags & mascots, the hero carousel, featured teams and the sidebar ads — all via
-drag-and-drop upload. The football API is never touched: your uploads are merged on
-top of live data, keyed by player/nation name, so a picture you set keeps showing
-even after the API delivers new stats.
+A password-protected editor at `/admin` loads the **real website** inside a sandbox
+and lets you edit it in place:
+
+- **Switch pages** with the site's own top menu (Home, Teams, Table, Schedule,
+  Statistics, Live).
+- **Replace any picture** — hover a player photo, flag, mascot, hero image, featured
+  team or sidebar ad and drop a new file (or click to pick one).
+- **Edit text** — click hero titles/subtitles and featured-team names to type.
+- **Change fonts** — pick a site-wide heading and body font from the bottom panel.
+- **Save** — one button publishes everything.
+
+The football API is never touched: your edits are merged on top of live data, keyed
+by player/nation name, so a picture you set keeps showing even after the API delivers
+new stats. Live scores, tables and stats stay read-only from the API.
 
 **One-time setup in Vercel:**
 
@@ -48,8 +57,9 @@ even after the API delivers new stats.
    - `ADMIN_USER` = your admin username
    - `ADMIN_PASS` = your admin password
    - `ADMIN_SECRET` = any long random string (used to sign login sessions)
-3. Redeploy. Visit `/admin`, log in, upload, **Save**. Changes appear on the live
-   site within ~1 minute (the public overrides feed is cached 30s; the site polls 60s).
+3. Redeploy. Visit `/admin`, log in, edit on the page, **Save**. Changes appear on
+   the live site within ~1 minute (the public overrides feed is cached 30s; the site
+   polls 60s). In the editor itself, edits preview instantly.
 
 The credentials live only in Vercel env vars and are checked server-side in
 `api/admin.js`; the browser only ever holds a short-lived signed token.

@@ -3,6 +3,7 @@ import { PageShell } from "@/components/PageShell";
 import { mascotFor } from "@/lib/mascots";
 import { Flag } from "@/components/Flag";
 import { useData } from "@/context/data";
+import { EditImage } from "@/components/admin/Editable";
 import { X } from "lucide-react";
 import type { Standings } from "@/lib/types";
 import type { Overrides } from "@/lib/overrides";
@@ -43,18 +44,20 @@ export default function Teams() {
               className="card-surface card-hover p-3 text-left group"
             >
               <div className="aspect-square rounded-xl bg-soft overflow-hidden grid place-items-center relative">
-                {t.img ? (
-                  <img src={t.img} alt={t.country} className="h-full w-full object-cover object-top group-hover:scale-105 transition duration-500" />
-                ) : t.flag ? (
-                  <div className="h-full w-full grid place-items-center bg-soft">
-                    <Flag code={t.flag} className="h-14 w-20 rounded-md shadow-sm group-hover:scale-105 transition duration-500" />
-                  </div>
-                ) : (
-                  <span className="font-display font-extrabold text-white text-4xl" style={{
-                    backgroundColor: t.color, width: "100%", height: "100%", display: "grid", placeItems: "center",
-                  }}>{t.country.slice(0, 2).toUpperCase()}</span>
-                )}
-                <span className="absolute top-2 left-2 eyebrow px-1.5 py-0.5 rounded bg-white/90">Grp {t.group}</span>
+                <EditImage target={{ kind: "mascot", key: t.country }} className="absolute inset-0 grid place-items-center">
+                  {t.img ? (
+                    <img src={t.img} alt={t.country} className="h-full w-full object-cover object-top group-hover:scale-105 transition duration-500" />
+                  ) : t.flag ? (
+                    <div className="h-full w-full grid place-items-center bg-soft">
+                      <Flag code={t.flag} className="h-14 w-20 rounded-md shadow-sm group-hover:scale-105 transition duration-500" />
+                    </div>
+                  ) : (
+                    <span className="font-display font-extrabold text-white text-4xl" style={{
+                      backgroundColor: t.color, width: "100%", height: "100%", display: "grid", placeItems: "center",
+                    }}>{t.country.slice(0, 2).toUpperCase()}</span>
+                  )}
+                </EditImage>
+                <span className="absolute top-2 left-2 eyebrow px-1.5 py-0.5 rounded bg-white/90 z-10">Grp {t.group}</span>
               </div>
               <div className="mt-2 flex items-center gap-1.5">
                 <Flag code={t.flag} className="h-3.5 w-5 shrink-0" />

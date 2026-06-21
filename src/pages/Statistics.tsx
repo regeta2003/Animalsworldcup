@@ -2,6 +2,7 @@ import { PageShell } from "@/components/PageShell";
 import { TopScorers } from "@/components/TopScorers";
 import { TeamAvatar } from "@/components/TeamAvatar";
 import { useData } from "@/context/data";
+import { EditImage } from "@/components/admin/Editable";
 import type { Scorer } from "@/lib/types";
 
 export default function Statistics() {
@@ -17,7 +18,9 @@ export default function Statistics() {
         {rows.slice(0, 6).map((s, i) => (
           <li key={s.name} className="flex items-center gap-3 py-2.5">
             <span className="w-5 font-display font-extrabold text-ink/60 text-center">{i + 1}</span>
-            <TeamAvatar name={s.team} img={s.img} size={32} />
+            <EditImage target={{ kind: "player", key: s.name }} round className="rounded-full">
+              <TeamAvatar name={s.team} img={s.img} size={32} />
+            </EditImage>
             <div className="min-w-0 flex-1">
               <div className="text-sm font-semibold truncate">{s.name}</div>
               <div className="text-[11px] text-muted-foreground truncate">{s.team}</div>

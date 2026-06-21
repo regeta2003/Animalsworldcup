@@ -1,13 +1,15 @@
 import { flagUrl } from "@/lib/mascots";
 import { useData } from "@/context/data";
+import { EditImage } from "@/components/admin/Editable";
 
 /** Real flag image (flagcdn), or an admin-uploaded flag when one exists for this
- *  code. Used instead of emoji flags, which don't render on Windows. */
+ *  code. Used instead of emoji flags, which don't render on Windows. In edit mode
+ *  the flag becomes drag-drop replaceable. */
 export function Flag({ code, className = "h-3.5 w-5" }: { code?: string; className?: string }) {
   const { overrides } = useData();
   if (!code) return <span className={`inline-block ${className}`} aria-hidden="true" />;
   const src = overrides.flags?.[code] || flagUrl(code);
-  return (
+  const img = (
     <img
       src={src}
       alt=""
@@ -15,4 +17,5 @@ export function Flag({ code, className = "h-3.5 w-5" }: { code?: string; classNa
       className={`inline-block object-cover rounded-[2px] ring-1 ring-black/10 ${className}`}
     />
   );
+  return <EditImage target={{ kind: "flag", key: code }} className={className}>{img}</EditImage>;
 }

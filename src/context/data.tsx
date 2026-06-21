@@ -2,10 +2,10 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from "
 import * as mock from "@/data/mock";
 import { fetchStandings, fetchFixtures, fetchScorers, fetchOverrides } from "@/lib/client";
 import { shapeStandings, shapeMatches, shapeScorers, deriveBestPlayer, EMPTY_BEST } from "@/lib/transforms";
-import { EMPTY_OVERRIDES, type Overrides } from "@/lib/overrides";
+import { EMPTY_OVERRIDES, applyFonts, type Overrides } from "@/lib/overrides";
 import type { Match, Standings, Scorer, BestPlayerT } from "@/lib/types";
 
-type DataShape = {
+export type DataShape = {
   matches: Match[];
   standings: Standings;
   scorers: Scorer[];
@@ -25,7 +25,7 @@ const fallback: DataShape = {
   ready: false,
 };
 
-const DataContext = createContext<DataShape>(fallback);
+export const DataContext = createContext<DataShape>(fallback);
 export const useData = () => useContext(DataContext);
 
 // Apply player-picture overrides regardless of whether data is live or mock.
@@ -82,6 +82,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const id = setInterval(load, 60_000);
     return () => { on = false; clearInterval(id); };
   }, []);
+
+  // Apply the admin's site-wide font choice.
+  useEffect(() => { applyFonts(data.overrides.font); }, [data.overrides.font]);
 
   return <DataContext.Provider value={data}>{children}</DataContext.Provider>;
 }

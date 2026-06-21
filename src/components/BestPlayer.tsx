@@ -2,6 +2,7 @@ import { Star, ArrowRight } from "lucide-react";
 import { useData } from "@/context/data";
 import { Flag } from "@/components/Flag";
 import { Link } from "react-router-dom";
+import { EditImage } from "@/components/admin/Editable";
 
 export function BestPlayer() {
   const { bestPlayer } = useData();
@@ -15,7 +16,9 @@ export function BestPlayer() {
           <h3 className="headline text-xl mt-1">Today's MVP</h3>
         </div>
         {hasData && bestPlayer.img ? (
-          <img src={bestPlayer.img} alt={bestPlayer.name} className="absolute -bottom-2 right-0 h-40 object-contain object-bottom-right" />
+          <EditImage target={{ kind: "player", key: bestPlayer.name }} className="absolute -bottom-2 right-0 h-40">
+            <img src={bestPlayer.img} alt={bestPlayer.name} className="h-40 object-contain object-bottom-right" />
+          </EditImage>
         ) : hasData && bestPlayer.flag ? (
           <div className="absolute -bottom-3 right-5 h-24 w-24 rounded-full overflow-hidden ring-4 ring-white/40 shadow-xl">
             <Flag code={bestPlayer.flag} className="h-full w-full" />

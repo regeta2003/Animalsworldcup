@@ -4,6 +4,7 @@
 export type AdItem = { img: string; link: string };
 export type HeroSlide = { tag: string; title: string; sub: string; img: string; color: string };
 export type FeaturedItem = { animal: string; nick: string; country: string; color: string; img: string };
+export type FontPick = { heading?: string; body?: string };
 
 export type Overrides = {
   flags: Record<string, string>;     // flagcdn code  -> image url
@@ -12,11 +13,45 @@ export type Overrides = {
   hero: HeroSlide[] | null;          // null -> use built-in default
   featured: FeaturedItem[] | null;   // null -> use built-in default
   ads: { sidebarTop?: AdItem | null; sidebarBottom?: AdItem | null };
+  font?: FontPick;                   // site-wide font choice (heading / body)
 };
 
 export const EMPTY_OVERRIDES: Overrides = {
-  flags: {}, mascots: {}, players: {}, hero: null, featured: null, ads: {},
+  flags: {}, mascots: {}, players: {}, hero: null, featured: null, ads: {}, font: {},
 };
+
+// Curated font choices for the admin picker. `google` (if present) is the
+// fonts.googleapis.com family spec to lazy-load.
+export const FONTS: Record<string, { label: string; stack: string; google?: string }> = {
+  barlow: { label: "Barlow Condensed", stack: '"Barlow Condensed", system-ui, sans-serif', google: "Barlow+Condensed:wght@500;600;700;800;900" },
+  inter: { label: "Inter", stack: '"Inter", system-ui, sans-serif', google: "Inter:wght@400;500;600;700;800" },
+  oswald: { label: "Oswald", stack: '"Oswald", system-ui, sans-serif', google: "Oswald:wght@400;500;600;700" },
+  poppins: { label: "Poppins", stack: '"Poppins", system-ui, sans-serif', google: "Poppins:wght@400;500;600;700;800" },
+  montserrat: { label: "Montserrat", stack: '"Montserrat", system-ui, sans-serif', google: "Montserrat:wght@400;500;600;700;800" },
+  roboto: { label: "Roboto", stack: '"Roboto", system-ui, sans-serif', google: "Roboto:wght@400;500;700;900" },
+  playfair: { label: "Playfair Display", stack: '"Playfair Display", Georgia, serif', google: "Playfair+Display:wght@500;600;700;800" },
+  system: { label: "System", stack: "system-ui, -apple-system, sans-serif" },
+  georgia: { label: "Georgia (serif)", stack: 'Georgia, "Times New Roman", serif' },
+};
+
+function loadGoogleFont(id: string, doc: Document) {
+  const f = FONTS[id];
+  if (!f?.google) return;
+  const linkId = `awc-font-${id}`;
+  if (doc.getElementById(linkId)) return;
+  const link = doc.createElement("link");
+  link.id = linkId;
+  link.rel = "stylesheet";
+  link.href = `https://fonts.googleapis.com/css2?family=${f.google}&display=swap`;
+  doc.head.appendChild(link);
+}
+
+// Apply a font choice to a document by setting the CSS variables the site uses.
+export function applyFonts(font?: FontPick, doc: Document = document) {
+  const root = doc.documentElement;
+  if (font?.heading && FONTS[font.heading]) { loadGoogleFont(font.heading, doc); root.style.setProperty("--font-display", FONTS[font.heading].stack); }
+  if (font?.body && FONTS[font.body]) { loadGoogleFont(font.body, doc); root.style.setProperty("--font-sans", FONTS[font.body].stack); }
+}
 
 // Stable public URLs (copied into /public/mascots) so admin-seeded defaults
 // survive redeploys — unlike hashed bundle asset URLs.
