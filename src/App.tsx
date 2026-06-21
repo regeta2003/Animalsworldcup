@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import Home from "@/pages/Home";
 import Teams from "@/pages/Teams";
 import Table from "@/pages/Table";
@@ -8,6 +8,8 @@ import Statistics from "@/pages/Statistics";
 import Live from "@/pages/Live";
 import News from "@/pages/News";
 import Article from "@/pages/Article";
+
+const Admin = lazy(() => import("@/pages/Admin"));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -28,6 +30,7 @@ export default function App() {
       <Route path="/live" element={<Live />} />
       <Route path="/news" element={<News />} />
       <Route path="/news/:id" element={<Article />} />
+      <Route path="/admin" element={<Suspense fallback={null}><Admin /></Suspense>} />
       <Route path="*" element={<Home />} />
       </Routes>
     </>

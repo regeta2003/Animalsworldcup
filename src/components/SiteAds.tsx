@@ -1,4 +1,20 @@
+import type { AdItem } from "@/lib/overrides";
+
 const IG = "https://www.instagram.com/animalsworldcup";
+
+/** Admin-uploaded custom ad (image + optional link). Renders in the 300x250 slot. */
+export function CustomAd({ ad }: { ad: AdItem }) {
+  const img = (
+    <img
+      src={ad.img}
+      alt="Advertisement"
+      style={{ width: "100%", maxWidth: 300, height: 250, objectFit: "cover", borderRadius: 12, margin: "0 auto", display: "block" }}
+    />
+  );
+  return ad.link ? (
+    <a href={ad.link} target="_blank" rel="noopener noreferrer" style={{ display: "block" }}>{img}</a>
+  ) : img;
+}
 
 /** Farhad's "Powered by AI" self-promo ad. Contact -> Instagram. 300x250. */
 export function AiServicesAd() {

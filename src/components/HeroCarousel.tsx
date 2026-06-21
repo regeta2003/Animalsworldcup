@@ -1,8 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { topStories } from "@/data/mock";
+import { topStories as defaultStories } from "@/data/mock";
+import { useData } from "@/context/data";
 
 export function HeroCarousel() {
+  const { overrides } = useData();
+  const topStories = overrides.hero && overrides.hero.length ? overrides.hero : defaultStories;
   const [i, setI] = useState(0);
   const paused = useRef(false);
   const touchX = useRef<number | null>(null);

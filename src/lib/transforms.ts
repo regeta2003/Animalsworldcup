@@ -1,4 +1,12 @@
 import { mascotFor, colorFor, metaFor, codeFor, flagUrl } from "./mascots";
+import { EMPTY_OVERRIDES, type Overrides } from "./overrides";
+
+// Admin mascot/flag override for a real nation name. Order: uploaded mascot ->
+// bundled mascot art -> uploaded flag -> flagcdn flag -> null.
+const teamImg = (ov: Overrides, real?: string | null, bundled?: string | null): string | null => {
+  const code = codeFor(real);
+  return (real && ov.mascots[real]) || bundled || (code && ov.flags[code]) || flagUrl(code) || null;
+};
 
 const roundGroup = (round = ""): string =>
   (round.match(/Group\s+([A-L])\b/i)?.[1]?.toUpperCase() || "");
@@ -32,7 +40,7 @@ export function shapeStandings(json: any) {
   return { standings, teamGroup };
 }
 
-export function shapeMatches(json: any, teamGroup: Record<string, string> = {}) {
+export function shapeMatches(json: any, teamGroup: Record<string, string> = {}, ov: Overrides = EMPTY_OVERRIDES) {
   const arr = json?.response || [];
   return arr.slice(0, 12).map((f: any) => {
     const short = f.fixture?.status?.short;
@@ -52,48 +60,50 @@ export function shapeMatches(json: any, teamGroup: Record<string, string> = {}) 
       date: f.fixture?.date,
       status,
       clock: (f.fixture?.status?.elapsed ?? 0) + "'",
-      homeImg: hm?.img ?? (flagUrl(codeFor(homeReal)) || null),
-      awayImg: am?.img ?? (flagUrl(codeFor(awayReal)) || null),
+      homeImg: teamImg(ov, homeReal, hm?.img),
+      awayImg: teamImg(ov, awayReal, am?.img),
     };
   });
 }
 
-export function shapeScorers(json: any) {
+export function shapeScorers(json: any, ov: Overrides = EMPTY_OVERRIDES) {
   const arr = json?.response || [];
   return arr.slice(0, 10).map((p: any, i: number) => {
     const st = p.statistics?.[0] || {};
     const real = st.team?.name;
     const m = mascotFor(real);
+    const name = p.player?.name;
     return {
       rank: i + 1,
-      name: p.player?.name,
+      name,
       team: m ? m.animal : real,
       goals: st.goals?.total ?? 0,
       assists: st.goals?.assists ?? 0,
       rating: st.games?.rating ? Number(st.games.rating) : 0,
-      img: m?.img ?? (flagUrl(codeFor(real)) || null),
+      img: (name && ov.players[name]) || m?.img || (flagUrl(codeFor(real)) || null),
     };
   });
 }
 
 const EMPTY_BEST = { name: "", team: "", animal: "", flag: "", goals: 0, assists: 0, rating: 0, img: null };
 
-export function deriveBestPlayer(json: any) {
+export function deriveBestPlayer(json: any, ov: Overrides = EMPTY_OVERRIDES) {
   const p = json?.response?.[0];
   if (!p) return EMPTY_BEST;
   const st = p.statistics?.[0] || {};
   const real = st.team?.name;
   const m = mascotFor(real);
   const meta = metaFor(real);
+  const name = p.player?.name ?? "";
   return {
-    name: p.player?.name ?? "",
+    name,
     team: real ?? "",
     animal: meta?.animal ?? m?.animal ?? "",
     flag: codeFor(real),
     goals: st.goals?.total ?? 0,
     assists: st.goals?.assists ?? 0,
     rating: st.games?.rating ? Number(st.games.rating) : 0,
-    img: m?.img ?? null,
+    img: (name && ov.players[name]) || m?.img || null,
   };
 }
 export { EMPTY_BEST };

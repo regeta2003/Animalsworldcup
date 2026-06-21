@@ -5,23 +5,24 @@ import { Flag } from "@/components/Flag";
 import { useData } from "@/context/data";
 import { X } from "lucide-react";
 import type { Standings } from "@/lib/types";
+import type { Overrides } from "@/lib/overrides";
 
 type TeamCard = { country: string; animal: string; flag: string; color: string; img?: string; nick?: string; group: string };
 
-function buildTeams(standings: Standings): TeamCard[] {
+function buildTeams(standings: Standings, ov: Overrides): TeamCard[] {
   const out: TeamCard[] = [];
   for (const [group, rows] of Object.entries(standings)) {
     for (const r of rows) {
       const m = mascotFor(r.country);
-      out.push({ country: r.country, animal: r.animal, flag: r.flag, color: r.color, img: m?.img, nick: m?.nick, group });
+      out.push({ country: r.country, animal: r.animal, flag: r.flag, color: r.color, img: ov.mascots?.[r.country] || m?.img, nick: m?.nick, group });
     }
   }
   return out;
 }
 
 export default function Teams() {
-  const { standings } = useData();
-  const teams = buildTeams(standings);
+  const { standings, overrides } = useData();
+  const teams = buildTeams(standings, overrides);
   const [selected, setSelected] = useState<TeamCard | null>(null);
 
   return (

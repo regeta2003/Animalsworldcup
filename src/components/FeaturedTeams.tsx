@@ -1,10 +1,13 @@
-import { featuredTeams } from "@/data/mock";
+import { featuredTeams as defaultFeatured } from "@/data/mock";
 import { Flag } from "@/components/Flag";
 import { codeFor } from "@/lib/mascots";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useData } from "@/context/data";
 
 export function FeaturedTeams() {
+  const { overrides } = useData();
+  const featuredTeams = overrides.featured && overrides.featured.length ? overrides.featured : defaultFeatured;
   return (
     <section>
       <h3 className="headline text-lg mb-3">Featured Teams</h3>

@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import * as mock from "@/data/mock";
-import { fetchStandings, fetchFixtures, fetchScorers } from "@/lib/client";
+import { fetchStandings, fetchFixtures, fetchScorers, fetchOverrides } from "@/lib/client";
 import { shapeStandings, shapeMatches, shapeScorers, deriveBestPlayer, EMPTY_BEST } from "@/lib/transforms";
+import { EMPTY_OVERRIDES, type Overrides } from "@/lib/overrides";
 import type { Match, Standings, Scorer, BestPlayerT } from "@/lib/types";
 
 type DataShape = {
@@ -9,6 +10,7 @@ type DataShape = {
   standings: Standings;
   scorers: Scorer[];
   bestPlayer: BestPlayerT;
+  overrides: Overrides;
   live: boolean;
   ready: boolean;
 };
@@ -18,12 +20,24 @@ const fallback: DataShape = {
   standings: mock.standings as Standings,
   scorers: mock.scorers as Scorer[],
   bestPlayer: mock.bestPlayer as BestPlayerT,
+  overrides: EMPTY_OVERRIDES,
   live: false,
   ready: false,
 };
 
 const DataContext = createContext<DataShape>(fallback);
 export const useData = () => useContext(DataContext);
+
+// Apply player-picture overrides regardless of whether data is live or mock.
+function applyPlayers(d: DataShape): DataShape {
+  const ov = d.overrides;
+  if (!ov || !Object.keys(ov.players || {}).length) return d;
+  return {
+    ...d,
+    scorers: d.scorers.map((s) => ({ ...s, img: ov.players[s.name] || s.img })),
+    bestPlayer: { ...d.bestPlayer, img: (d.bestPlayer.name && ov.players[d.bestPlayer.name]) || d.bestPlayer.img },
+  };
+}
 
 export function DataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<DataShape>(fallback);
@@ -32,9 +46,13 @@ export function DataProvider({ children }: { children: ReactNode }) {
     let on = true;
     const load = async () => {
       try {
-        const [st, fx, sc] = await Promise.allSettled([fetchStandings(), fetchFixtures(), fetchScorers()]);
+        const [st, fx, sc, ovr] = await Promise.allSettled([
+          fetchStandings(), fetchFixtures(), fetchScorers(), fetchOverrides(),
+        ]);
         if (!on) return;
-        const next: DataShape = { ...fallback };
+        const ov: Overrides =
+          ovr.status === "fulfilled" ? { ...EMPTY_OVERRIDES, ...ovr.value } : EMPTY_OVERRIDES;
+        const next: DataShape = { ...fallback, overrides: ov };
         let any = false;
         let teamGroup: Record<string, string> = {};
 
@@ -43,17 +61,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
           if (Object.keys(s.standings).length) { next.standings = s.standings; teamGroup = s.teamGroup; any = true; }
         }
         if (fx.status === "fulfilled") {
-          const m = shapeMatches(fx.value, teamGroup);
+          const m = shapeMatches(fx.value, teamGroup, ov);
           if (m.length) { next.matches = m as Match[]; any = true; }
         }
         if (sc.status === "fulfilled") {
-          const s = shapeScorers(sc.value);
-          if (s.length) { next.scorers = s as Scorer[]; next.bestPlayer = deriveBestPlayer(sc.value) as BestPlayerT; any = true; }
+          const s = shapeScorers(sc.value, ov);
+          if (s.length) { next.scorers = s as Scorer[]; next.bestPlayer = deriveBestPlayer(sc.value, ov) as BestPlayerT; any = true; }
           else { next.scorers = []; next.bestPlayer = EMPTY_BEST as BestPlayerT; } // live but no goals yet
         }
         next.live = any;
         next.ready = true;
-        setData(next);
+        setData(applyPlayers(next));
       } catch {
         // API unreachable: keep demo data, but clear the loading state so the
         // matches area shows the demo cards instead of skeletons forever.

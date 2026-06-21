@@ -8,3 +8,9 @@ async function call(type: string) {
 export const fetchStandings = () => call("standings");
 export const fetchFixtures = () => call("fixtures");
 export const fetchScorers = () => call("scorers");
+
+export async function fetchOverrides() {
+  const r = await fetch("/api/admin?action=overrides");
+  if (!r.ok) throw new Error(`overrides ${r.status}`);
+  return r.json();
+}

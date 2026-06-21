@@ -32,6 +32,28 @@ and swaps to live data the moment the key is configured.
 
 > The key MUST be set in Vercel. Vercel does not read the local `.env` in production.
 
+## Admin dashboard (`/admin`)
+
+A password-protected dashboard at `/admin` lets you override player pictures, team
+flags & mascots, the hero carousel, featured teams and the sidebar ads — all via
+drag-and-drop upload. The football API is never touched: your uploads are merged on
+top of live data, keyed by player/nation name, so a picture you set keeps showing
+even after the API delivers new stats.
+
+**One-time setup in Vercel:**
+
+1. **Storage → Create → Blob** (in your Vercel project). This auto-adds the
+   `BLOB_READ_WRITE_TOKEN` env var — uploads and saved edits live here.
+2. **Settings → Environment Variables** (Production), add:
+   - `ADMIN_USER` = your admin username
+   - `ADMIN_PASS` = your admin password
+   - `ADMIN_SECRET` = any long random string (used to sign login sessions)
+3. Redeploy. Visit `/admin`, log in, upload, **Save**. Changes appear on the live
+   site within ~1 minute (the public overrides feed is cached 30s; the site polls 60s).
+
+The credentials live only in Vercel env vars and are checked server-side in
+`api/admin.js`; the browser only ever holds a short-lived signed token.
+
 ## How data flows
 
 - `api/awc.js` — Vercel serverless proxy (key server-side, 60s cache, live->upcoming
