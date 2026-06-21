@@ -12,7 +12,7 @@ export type Overrides = {
   players: Record<string, string>;   // player name   -> image url
   hero: HeroSlide[] | null;          // null -> use built-in default
   featured: FeaturedItem[] | null;   // null -> use built-in default
-  ads: { sidebarTop?: AdItem | null; sidebarBottom?: AdItem | null };
+  ads: { sidebarTop?: AdItem | null; sidebarBottom?: AdItem | null; extra?: AdItem[] };
   font?: FontPick;                   // site-wide font choice (heading / body)
 };
 

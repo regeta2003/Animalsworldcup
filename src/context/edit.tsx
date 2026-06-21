@@ -7,16 +7,23 @@ export type ImgTarget =
   | { kind: "mascot"; key: string | string[] }
   | { kind: "hero"; index: number }
   | { kind: "featured"; index: number }
-  | { kind: "ad"; slot: "sidebarTop" | "sidebarBottom" };
+  | { kind: "ad"; slot: "sidebarTop" | "sidebarBottom" }
+  | { kind: "adExtra"; index: number };
 
 export type TextTarget =
   | { kind: "hero"; index: number; field: "tag" | "title" | "sub" }
-  | { kind: "featured"; index: number; field: "animal" | "nick" };
+  | { kind: "featured"; index: number; field: "animal" | "nick" | "country" | "color" }
+  | { kind: "adLink"; slot: "sidebarTop" | "sidebarBottom" }
+  | { kind: "adExtraLink"; index: number };
+
+export type ListKind = "featured" | "ad";
 
 type EditCtx = {
   editing: boolean;
   onImage: (t: ImgTarget, url: string | null) => void;
   onText: (t: TextTarget, value: string) => void;
+  addItem: (kind: ListKind) => void;
+  removeItem: (kind: ListKind, index: number) => void;
   onError: (msg: string) => void;
 };
 
@@ -24,6 +31,8 @@ export const EditContext = createContext<EditCtx>({
   editing: false,
   onImage: () => {},
   onText: () => {},
+  addItem: () => {},
+  removeItem: () => {},
   onError: () => {},
 });
 

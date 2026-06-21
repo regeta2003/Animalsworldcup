@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { Loader2, LogOut, Save, ShieldCheck, ExternalLink, Type, ChevronUp, ChevronDown } from "lucide-react";
 import SiteRoutes from "@/SiteRoutes";
 import { DataContext, useData, type DataShape } from "@/context/data";
-import { EditContext, type ImgTarget, type TextTarget } from "@/context/edit";
+import { EditContext, type ImgTarget, type TextTarget, type ListKind } from "@/context/edit";
 import { login, getToken, clearToken, loadOverrides, saveOverrides } from "@/lib/adminClient";
 import {
   EMPTY_OVERRIDES, DEFAULT_HERO, DEFAULT_FEATURED, FONTS, applyFonts,
@@ -78,12 +78,38 @@ function applyImage(d: Overrides, t: ImgTarget, url: string | null): Overrides {
       if (!next.img && !next.link) delete ads[t.slot]; else ads[t.slot] = next;
       return { ...d, ads };
     }
+    case "adExtra": {
+      const extra = [...(d.ads.extra || [])];
+      extra[t.index] = { ...(extra[t.index] || { img: "", link: "" }), img: url || "" };
+      return { ...d, ads: { ...d.ads, extra } };
+    }
   }
 }
 
 function applyText(d: Overrides, t: TextTarget, value: string): Overrides {
   if (t.kind === "hero") { const hero = heroBase(d); hero[t.index] = { ...hero[t.index], [t.field]: value }; return { ...d, hero }; }
-  const featured = featBase(d); featured[t.index] = { ...featured[t.index], [t.field]: value }; return { ...d, featured };
+  if (t.kind === "featured") { const featured = featBase(d); featured[t.index] = { ...featured[t.index], [t.field]: value }; return { ...d, featured }; }
+  if (t.kind === "adLink") {
+    const cur = d.ads[t.slot] || { img: "", link: "" };
+    const next = { img: cur.img, link: value };
+    const ads = { ...d.ads };
+    if (!next.img && !next.link) delete ads[t.slot]; else ads[t.slot] = next;
+    return { ...d, ads };
+  }
+  // adExtraLink
+  const extra = [...(d.ads.extra || [])];
+  extra[t.index] = { ...(extra[t.index] || { img: "", link: "" }), link: value };
+  return { ...d, ads: { ...d.ads, extra } };
+}
+
+function applyAdd(d: Overrides, kind: ListKind): Overrides {
+  if (kind === "featured") return { ...d, featured: [...featBase(d), { animal: "New Team", nick: "", country: "", color: "#0B8A3D", img: "" }] };
+  return { ...d, ads: { ...d.ads, extra: [...(d.ads.extra || []), { img: "", link: "" }] } };
+}
+
+function applyRemove(d: Overrides, kind: ListKind, index: number): Overrides {
+  if (kind === "featured") return { ...d, featured: featBase(d).filter((_, i) => i !== index) };
+  return { ...d, ads: { ...d.ads, extra: (d.ads.extra || []).filter((_, i) => i !== index) } };
 }
 
 /* ----------------------------------------------------------------- editor -- */
@@ -104,6 +130,8 @@ function Editor({ onLogout }: { onLogout: () => void }) {
 
   const onImage = (t: ImgTarget, url: string | null) => setDraft((d) => applyImage(d, t, url));
   const onText = (t: TextTarget, value: string) => setDraft((d) => applyText(d, t, value));
+  const addItem = (kind: ListKind) => setDraft((d) => applyAdd(d, kind));
+  const removeItem = (kind: ListKind, index: number) => setDraft((d) => applyRemove(d, kind, index));
 
   const save = async () => {
     setSaving(true);
@@ -124,7 +152,7 @@ function Editor({ onLogout }: { onLogout: () => void }) {
   if (!loaded) return <div className="min-h-screen grid place-items-center bg-soft"><Loader2 className="h-7 w-7 animate-spin text-pitch" /></div>;
 
   return (
-    <EditContext.Provider value={{ editing: true, onImage, onText, onError: flash }}>
+    <EditContext.Provider value={{ editing: true, onImage, onText, addItem, removeItem, onError: flash }}>
       <DataContext.Provider value={data}>
         <MemoryRouter initialEntries={["/"]}>
           <SiteRoutes />

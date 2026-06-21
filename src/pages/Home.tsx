@@ -8,10 +8,29 @@ import { FeaturedTeams } from "@/components/FeaturedTeams";
 import { BestPlayer } from "@/components/BestPlayer";
 import { LatestNews } from "@/components/LatestNews";
 import { AiVideo } from "@/components/AiVideo";
-import { AdSlot } from "@/components/AdSlot";
+import { AdRegion } from "@/components/AdRegion";
 import { AiServicesAd, EnergyDrinkAd, CustomAd } from "@/components/SiteAds";
 import { useData } from "@/context/data";
+import { useEdit } from "@/context/edit";
 import { EditImage } from "@/components/admin/Editable";
+
+/** A branded sidebar ad slot: shows the built-in ad until a custom image is set,
+ *  and (in edit mode) exposes a click-through link field. */
+function BrandedAd({ slot, ad, fallback }: { slot: "sidebarTop" | "sidebarBottom"; ad?: { img: string; link: string } | null; fallback: React.ReactNode }) {
+  const { editing, onText } = useEdit();
+  return (
+    <div>
+      <EditImage target={{ kind: "ad", slot }} className="block">
+        {ad?.img ? <CustomAd ad={ad} /> : fallback}
+      </EditImage>
+      {editing && ad?.img && (
+        <input value={ad.link} placeholder="Link (optional)"
+          onChange={(e) => onText({ kind: "adLink", slot }, e.target.value)}
+          className="mt-1.5 w-full text-xs rounded-lg border border-border px-2 py-1 bg-white" />
+      )}
+    </div>
+  );
+}
 
 export default function Home() {
   const { overrides } = useData();
@@ -23,9 +42,7 @@ export default function Home() {
         <aside className="space-y-5 order-2 lg:order-1">
           <FeaturedTeams />
           <div className="hidden lg:block">
-            <EditImage target={{ kind: "ad", slot: "sidebarTop" }} className="block">
-              {top?.img ? <CustomAd ad={top} /> : <AiServicesAd />}
-            </EditImage>
+            <BrandedAd slot="sidebarTop" ad={top} fallback={<AiServicesAd />} />
           </div>
         </aside>
         <div className="space-y-7 order-1 lg:order-2 min-w-0">
@@ -39,10 +56,8 @@ export default function Home() {
           <BestPlayer />
           <LatestNews />
           <AiVideo />
-          <EditImage target={{ kind: "ad", slot: "sidebarBottom" }} className="block">
-            {bottom?.img ? <CustomAd ad={bottom} /> : <EnergyDrinkAd />}
-          </EditImage>
-          <AdSlot size="300x100" />
+          <BrandedAd slot="sidebarBottom" ad={bottom} fallback={<EnergyDrinkAd />} />
+          <AdRegion />
         </aside>
       </div>
     </PageShell>
