@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { Loader2, LogOut, Save, ShieldCheck, ExternalLink, Type, ChevronUp, ChevronDown } from "lucide-react";
-import App from "@/App";
+import SiteRoutes from "@/SiteRoutes";
 import { DataContext, useData, type DataShape } from "@/context/data";
 import { EditContext, type ImgTarget, type TextTarget } from "@/context/edit";
 import { login, getToken, clearToken, loadOverrides, saveOverrides } from "@/lib/adminClient";
@@ -127,7 +127,7 @@ function Editor({ onLogout }: { onLogout: () => void }) {
     <EditContext.Provider value={{ editing: true, onImage, onText, onError: flash }}>
       <DataContext.Provider value={data}>
         <MemoryRouter initialEntries={["/"]}>
-          <App />
+          <SiteRoutes />
         </MemoryRouter>
         <Toolbar draft={draft} setDraft={setDraft} saving={saving} save={save} onLogout={onLogout} msg={msg} />
       </DataContext.Provider>
