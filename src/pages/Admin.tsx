@@ -103,11 +103,13 @@ function applyText(d: Overrides, t: TextTarget, value: string): Overrides {
 }
 
 function applyAdd(d: Overrides, kind: ListKind): Overrides {
+  if (kind === "hero") return { ...d, hero: [...heroBase(d), { tag: "TOP STORY", title: "New story", sub: "", img: "", color: "#0B8A3D" }] };
   if (kind === "featured") return { ...d, featured: [...featBase(d), { animal: "New Team", nick: "", country: "", color: "#0B8A3D", img: "" }] };
   return { ...d, ads: { ...d.ads, extra: [...(d.ads.extra || []), { img: "", link: "" }] } };
 }
 
 function applyRemove(d: Overrides, kind: ListKind, index: number): Overrides {
+  if (kind === "hero") return { ...d, hero: heroBase(d).filter((_, i) => i !== index) };
   if (kind === "featured") return { ...d, featured: featBase(d).filter((_, i) => i !== index) };
   return { ...d, ads: { ...d.ads, extra: (d.ads.extra || []).filter((_, i) => i !== index) } };
 }

@@ -1,24 +1,31 @@
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
 import { topStories as defaultStories } from "@/data/mock";
 import { useData } from "@/context/data";
+import { useEdit } from "@/context/edit";
 import { EditImage, EditText } from "@/components/admin/Editable";
 
 export function HeroCarousel() {
   const { overrides } = useData();
+  const { editing, addItem, removeItem, onText } = useEdit();
   const topStories = overrides.hero && overrides.hero.length ? overrides.hero : defaultStories;
   const [i, setI] = useState(0);
   const paused = useRef(false);
   const touchX = useRef<number | null>(null);
 
+  const cur = Math.min(i, topStories.length - 1); // stay valid after a delete
+
   useEffect(() => {
+    if (editing) return; // don't auto-advance while editing
     const id = setInterval(() => {
       if (!paused.current) setI((p) => (p + 1) % topStories.length);
     }, 5500);
     return () => clearInterval(id);
-  }, []);
+  }, [editing, topStories.length]);
 
   const go = (n: number) => setI((n + topStories.length) % topStories.length);
+  const addSlide = () => { addItem("hero"); setI(topStories.length); };
+  const delSlide = () => { removeItem("hero", cur); setI(Math.max(0, Math.min(cur, topStories.length - 2))); };
 
   return (
     <section
@@ -29,16 +36,26 @@ export function HeroCarousel() {
       onTouchEnd={(e) => {
         if (touchX.current == null) return;
         const dx = e.changedTouches[0].clientX - touchX.current;
-        if (Math.abs(dx) > 40) go(i + (dx < 0 ? 1 : -1));
+        if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
         touchX.current = null;
       }}
     >
+      {editing && (
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-[#1a1a1a]/90 text-white rounded-full px-2 py-1 shadow-lg">
+          <span className="text-[10px] font-display uppercase tracking-wider px-1 text-white/60">Slide {cur + 1}/{topStories.length}</span>
+          <input type="color" value={topStories[cur]?.color || "#0B8A3D"} title="Accent colour"
+            onChange={(e) => onText({ kind: "hero", index: cur, field: "color" }, e.target.value)}
+            className="h-6 w-7 rounded bg-transparent border border-white/20 cursor-pointer" />
+          <button onClick={delSlide} title="Delete slide" className="h-7 w-7 grid place-items-center rounded-full text-white/80 hover:bg-white/10"><Trash2 className="h-3.5 w-3.5" /></button>
+          <button onClick={addSlide} className="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-pitch text-[11px] font-display font-bold uppercase tracking-wider"><Plus className="h-3.5 w-3.5" /> Add slide</button>
+        </div>
+      )}
       <div className="relative h-[360px] sm:h-[400px] lg:h-[440px]">
         {topStories.map((s, idx) => (
           <div
             key={idx}
-            className={`absolute inset-0 transition-opacity duration-700 ${idx === i ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-            aria-hidden={idx !== i}
+            className={`absolute inset-0 transition-opacity duration-700 ${idx === cur ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+            aria-hidden={idx !== cur}
           >
             <div className="absolute inset-0" style={{ background: `linear-gradient(110deg, #ffffff 0%, #ffffff 48%, ${s.color}18 70%, ${s.color}28 100%)` }} />
             <div className="absolute -right-10 -bottom-10 w-[70%] h-[120%] opacity-[0.06]" style={{ background: `radial-gradient(closest-side, ${s.color}, transparent)` }} />
@@ -64,17 +81,17 @@ export function HeroCarousel() {
         ))}
       </div>
 
-      <button onClick={() => go(i - 1)} aria-label="Previous" className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full bg-white/90 hover:bg-white border border-border shadow-[var(--shadow-card)] transition">
+      <button onClick={() => go(cur - 1)} aria-label="Previous" className="absolute left-3 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full bg-white/90 hover:bg-white border border-border shadow-[var(--shadow-card)] transition">
         <ChevronLeft className="h-5 w-5" />
       </button>
-      <button onClick={() => go(i + 1)} aria-label="Next" className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full bg-white/90 hover:bg-white border border-border shadow-[var(--shadow-card)] transition">
+      <button onClick={() => go(cur + 1)} aria-label="Next" className="absolute right-3 top-1/2 -translate-y-1/2 h-10 w-10 grid place-items-center rounded-full bg-white/90 hover:bg-white border border-border shadow-[var(--shadow-card)] transition">
         <ChevronRight className="h-5 w-5" />
       </button>
 
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
         {topStories.map((_, idx) => (
           <button key={idx} aria-label={`Slide ${idx + 1}`} onClick={() => go(idx)}
-            className={`h-2 rounded-full transition-all ${idx === i ? "w-8 bg-pitch" : "w-2 bg-ink/20 hover:bg-ink/40"}`} />
+            className={`h-2 rounded-full transition-all ${idx === cur ? "w-8 bg-pitch" : "w-2 bg-ink/20 hover:bg-ink/40"}`} />
         ))}
       </div>
     </section>

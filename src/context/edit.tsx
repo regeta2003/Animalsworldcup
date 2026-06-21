@@ -11,12 +11,12 @@ export type ImgTarget =
   | { kind: "adExtra"; index: number };
 
 export type TextTarget =
-  | { kind: "hero"; index: number; field: "tag" | "title" | "sub" }
+  | { kind: "hero"; index: number; field: "tag" | "title" | "sub" | "color" }
   | { kind: "featured"; index: number; field: "animal" | "nick" | "country" | "color" }
   | { kind: "adLink"; slot: "sidebarTop" | "sidebarBottom" }
   | { kind: "adExtraLink"; index: number };
 
-export type ListKind = "featured" | "ad";
+export type ListKind = "hero" | "featured" | "ad";
 
 type EditCtx = {
   editing: boolean;
