@@ -35,6 +35,10 @@ export default async function handler(req, res) {
       const seen = new Set(liveArr.map((f) => f?.fixture?.id));
       const merged = [...liveArr, ...nextArr.filter((f) => !seen.has(f?.fixture?.id))];
       data = { ...(liveArr.length ? liveRes : nextRes), response: merged };
+    } else if (type === "knockout") {
+      // Full-season fixture list so the bracket can show knockout rounds even
+      // when they're not "next 10" yet (e.g. a Round of 16 game played early).
+      data = await get(`/fixtures?league=${league}&season=${season}`);
     } else return res.status(400).json({ error: "unknown type" });
 
     cache.set(ck, { t: Date.now(), data });

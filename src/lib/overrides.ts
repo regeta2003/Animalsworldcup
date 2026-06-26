@@ -5,6 +5,7 @@ export type AdItem = { img: string; link: string };
 export type HeroSlide = { tag: string; title: string; sub: string; img: string; color: string };
 export type FeaturedItem = { animal: string; nick: string; country: string; color: string; img: string };
 export type FontPick = { heading?: string; body?: string };
+export type KnockoutBg = { img: string; x: number; y: number; zoom: number };
 
 export type Overrides = {
   flags: Record<string, string>;     // flagcdn code  -> image url
@@ -13,11 +14,13 @@ export type Overrides = {
   hero: HeroSlide[] | null;          // null -> use built-in default
   featured: FeaturedItem[] | null;   // null -> use built-in default
   ads: { sidebarTop?: AdItem | null; sidebarBottom?: AdItem | null; extra?: AdItem[] };
+  knockout: KnockoutBg | null;        // null -> use built-in default background
+  trophy: string | null;             // null -> use built-in placeholder icon
   font?: FontPick;                   // site-wide font choice (heading / body)
 };
 
 export const EMPTY_OVERRIDES: Overrides = {
-  flags: {}, mascots: {}, players: {}, hero: null, featured: null, ads: {}, font: {},
+  flags: {}, mascots: {}, players: {}, hero: null, featured: null, ads: {}, knockout: null, trophy: null, font: {},
 };
 
 // Curated font choices for the admin picker. `google` (if present) is the

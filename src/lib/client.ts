@@ -7,6 +7,7 @@ async function call(type: string) {
 }
 export const fetchStandings = () => call("standings");
 export const fetchFixtures = () => call("fixtures");
+export const fetchKnockout = () => call("knockout");
 export const fetchScorers = () => call("scorers");
 
 export async function fetchOverrides() {

@@ -83,6 +83,11 @@ function applyImage(d: Overrides, t: ImgTarget, url: string | null): Overrides {
       extra[t.index] = { ...(extra[t.index] || { img: "", link: "" }), img: url || "" };
       return { ...d, ads: { ...d.ads, extra } };
     }
+    case "knockout": {
+      const cur = d.knockout || { img: "", x: 50, y: 50, zoom: 100 };
+      return { ...d, knockout: url ? { ...cur, img: url } : null };
+    }
+    case "trophy": return { ...d, trophy: url || null };
   }
 }
 
@@ -95,6 +100,10 @@ function applyText(d: Overrides, t: TextTarget, value: string): Overrides {
     const ads = { ...d.ads };
     if (!next.img && !next.link) delete ads[t.slot]; else ads[t.slot] = next;
     return { ...d, ads };
+  }
+  if (t.kind === "knockoutAdjust") {
+    const cur = d.knockout || { img: "", x: 50, y: 50, zoom: 100 };
+    return { ...d, knockout: { ...cur, [t.field]: Number(value) || 0 } };
   }
   // adExtraLink
   const extra = [...(d.ads.extra || [])];

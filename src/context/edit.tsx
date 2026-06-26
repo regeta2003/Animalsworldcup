@@ -8,13 +8,16 @@ export type ImgTarget =
   | { kind: "hero"; index: number }
   | { kind: "featured"; index: number }
   | { kind: "ad"; slot: "sidebarTop" | "sidebarBottom" }
-  | { kind: "adExtra"; index: number };
+  | { kind: "adExtra"; index: number }
+  | { kind: "knockout" }
+  | { kind: "trophy" };
 
 export type TextTarget =
   | { kind: "hero"; index: number; field: "tag" | "title" | "sub" | "color" }
   | { kind: "featured"; index: number; field: "animal" | "nick" | "country" | "color" }
   | { kind: "adLink"; slot: "sidebarTop" | "sidebarBottom" }
-  | { kind: "adExtraLink"; index: number };
+  | { kind: "adExtraLink"; index: number }
+  | { kind: "knockoutAdjust"; field: "x" | "y" | "zoom" };
 
 export type ListKind = "hero" | "featured" | "ad";
 

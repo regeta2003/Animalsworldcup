@@ -7,10 +7,11 @@ import { useData } from "@/context/data";
 import { useEdit } from "@/context/edit";
 import { EditImage, EditText } from "@/components/admin/Editable";
 
-export function FeaturedTeams() {
+export function FeaturedTeams({ limit }: { limit?: number } = {}) {
   const { overrides } = useData();
   const { editing, addItem, removeItem, onText } = useEdit();
-  const featuredTeams = overrides.featured && overrides.featured.length ? overrides.featured : defaultFeatured;
+  const all = overrides.featured && overrides.featured.length ? overrides.featured : defaultFeatured;
+  const featuredTeams = limit && !editing ? all.slice(0, limit) : all;
   return (
     <section>
       <h3 className="headline text-lg mb-3">Featured Teams</h3>

@@ -3,7 +3,7 @@ import { EMPTY_OVERRIDES, type Overrides } from "./overrides";
 
 // Admin mascot/flag override for a real nation name. Order: uploaded mascot ->
 // bundled mascot art -> uploaded flag -> flagcdn flag -> null.
-const teamImg = (ov: Overrides, real?: string | null, bundled?: string | null): string | null => {
+export const teamImg = (ov: Overrides, real?: string | null, bundled?: string | null): string | null => {
   const code = codeFor(real);
   return (real && ov.mascots[real]) || bundled || (code && ov.flags[code]) || flagUrl(code) || null;
 };
