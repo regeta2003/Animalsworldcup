@@ -10,14 +10,16 @@ export type ImgTarget =
   | { kind: "ad"; slot: "sidebarTop" | "sidebarBottom" }
   | { kind: "adExtra"; index: number }
   | { kind: "knockout" }
-  | { kind: "trophy" };
+  | { kind: "trophy" }
+  | { kind: "knockoutTeam"; key: string; mood: "happy" | "sad" };
 
 export type TextTarget =
   | { kind: "hero"; index: number; field: "tag" | "title" | "sub" | "color" }
   | { kind: "featured"; index: number; field: "animal" | "nick" | "country" | "color" }
   | { kind: "adLink"; slot: "sidebarTop" | "sidebarBottom" }
   | { kind: "adExtraLink"; index: number }
-  | { kind: "knockoutAdjust"; field: "x" | "y" | "zoom" };
+  | { kind: "knockoutAdjust"; field: "x" | "y" | "zoom" }
+  | { kind: "knockoutTeamName"; key: string };
 
 export type ListKind = "hero" | "featured" | "ad";
 

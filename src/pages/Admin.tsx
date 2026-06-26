@@ -88,6 +88,13 @@ function applyImage(d: Overrides, t: ImgTarget, url: string | null): Overrides {
       return { ...d, knockout: url ? { ...cur, img: url } : null };
     }
     case "trophy": return { ...d, trophy: url || null };
+    case "knockoutTeam": {
+      const cur = d.knockoutTeams[t.key] || {};
+      const next = { ...cur, [t.mood]: url || undefined };
+      const knockoutTeams = { ...d.knockoutTeams, [t.key]: next };
+      if (!next.happy && !next.sad && !next.name) delete knockoutTeams[t.key];
+      return { ...d, knockoutTeams };
+    }
   }
 }
 
@@ -104,6 +111,13 @@ function applyText(d: Overrides, t: TextTarget, value: string): Overrides {
   if (t.kind === "knockoutAdjust") {
     const cur = d.knockout || { img: "", x: 50, y: 50, zoom: 100 };
     return { ...d, knockout: { ...cur, [t.field]: Number(value) || 0 } };
+  }
+  if (t.kind === "knockoutTeamName") {
+    const cur = d.knockoutTeams[t.key] || {};
+    const next = { ...cur, name: value || undefined };
+    const knockoutTeams = { ...d.knockoutTeams, [t.key]: next };
+    if (!next.happy && !next.sad && !next.name) delete knockoutTeams[t.key];
+    return { ...d, knockoutTeams };
   }
   // adExtraLink
   const extra = [...(d.ads.extra || [])];

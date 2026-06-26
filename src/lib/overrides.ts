@@ -6,6 +6,9 @@ export type HeroSlide = { tag: string; title: string; sub: string; img: string; 
 export type FeaturedItem = { animal: string; nick: string; country: string; color: string; img: string };
 export type FontPick = { heading?: string; body?: string };
 export type KnockoutBg = { img: string; x: number; y: number; zoom: number };
+// Per-team knockout art: a "happy" picture shown while the team is alive/winning,
+// a "sad" picture shown once it's eliminated, plus an optional display-name override.
+export type KnockoutTeam = { name?: string; happy?: string; sad?: string };
 
 export type Overrides = {
   flags: Record<string, string>;     // flagcdn code  -> image url
@@ -15,12 +18,13 @@ export type Overrides = {
   featured: FeaturedItem[] | null;   // null -> use built-in default
   ads: { sidebarTop?: AdItem | null; sidebarBottom?: AdItem | null; extra?: AdItem[] };
   knockout: KnockoutBg | null;        // null -> use built-in default background
+  knockoutTeams: Record<string, KnockoutTeam>; // real country name -> happy/sad art + name
   trophy: string | null;             // null -> use built-in placeholder icon
   font?: FontPick;                   // site-wide font choice (heading / body)
 };
 
 export const EMPTY_OVERRIDES: Overrides = {
-  flags: {}, mascots: {}, players: {}, hero: null, featured: null, ads: {}, knockout: null, trophy: null, font: {},
+  flags: {}, mascots: {}, players: {}, hero: null, featured: null, ads: {}, knockout: null, knockoutTeams: {}, trophy: null, font: {},
 };
 
 // Curated font choices for the admin picker. `google` (if present) is the
