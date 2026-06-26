@@ -35,16 +35,20 @@ export default function Home() {
   const bottom = overrides.ads?.sidebarBottom;
   return (
     <PageShell>
-      <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)_150px] gap-5">
-        <aside className="space-y-5 order-2 lg:order-1">
-          <FeaturedTeams limit={1} />
-        </aside>
-        <div className="space-y-7 order-1 lg:order-2 min-w-0">
-          <HeroCarousel />
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_150px] gap-5">
+        <div className="space-y-7 order-1 min-w-0">
+          <div className="grid grid-cols-1 lg:grid-cols-[260px_minmax(0,1fr)] gap-5">
+            <aside className="space-y-5">
+              <FeaturedTeams limit={1} />
+            </aside>
+            <div className="min-w-0">
+              <HeroCarousel />
+            </div>
+          </div>
           <Knockout />
           <LiveMatches />
         </div>
-        <aside className="space-y-5 order-3">
+        <aside className="space-y-5 order-2">
           <BestPlayer />
           <LatestNews />
           <AiVideo />

@@ -11,7 +11,7 @@ export type ImgTarget =
   | { kind: "adExtra"; index: number }
   | { kind: "knockout" }
   | { kind: "trophy" }
-  | { kind: "knockoutTeam"; key: string; mood: "happy" | "sad" };
+  | { kind: "knockoutTeam"; key: string };
 
 export type TextTarget =
   | { kind: "hero"; index: number; field: "tag" | "title" | "sub" | "color" }

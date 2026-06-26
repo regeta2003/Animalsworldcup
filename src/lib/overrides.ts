@@ -6,9 +6,9 @@ export type HeroSlide = { tag: string; title: string; sub: string; img: string; 
 export type FeaturedItem = { animal: string; nick: string; country: string; color: string; img: string };
 export type FontPick = { heading?: string; body?: string };
 export type KnockoutBg = { img: string; x: number; y: number; zoom: number };
-// Per-team knockout art: a "happy" picture shown while the team is alive/winning,
-// a "sad" picture shown once it's eliminated, plus an optional display-name override.
-export type KnockoutTeam = { name?: string; happy?: string; sad?: string };
+// Per-slot knockout art: one picture (the admin swaps it for a happier/sadder
+// expression as the result becomes known) plus an optional display-name override.
+export type KnockoutTeam = { name?: string; img?: string };
 
 export type Overrides = {
   flags: Record<string, string>;     // flagcdn code  -> image url
@@ -18,7 +18,7 @@ export type Overrides = {
   featured: FeaturedItem[] | null;   // null -> use built-in default
   ads: { sidebarTop?: AdItem | null; sidebarBottom?: AdItem | null; extra?: AdItem[] };
   knockout: KnockoutBg | null;        // null -> use built-in default background
-  knockoutTeams: Record<string, KnockoutTeam>; // real country name -> happy/sad art + name
+  knockoutTeams: Record<string, KnockoutTeam>; // bracket slot key -> art + name
   trophy: string | null;             // null -> use built-in placeholder icon
   font?: FontPick;                   // site-wide font choice (heading / body)
 };

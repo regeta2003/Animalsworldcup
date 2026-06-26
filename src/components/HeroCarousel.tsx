@@ -50,7 +50,7 @@ export function HeroCarousel() {
           <button onClick={addSlide} className="inline-flex items-center gap-1 h-7 px-2.5 rounded-full bg-pitch text-[11px] font-display font-bold uppercase tracking-wider"><Plus className="h-3.5 w-3.5" /> Add slide</button>
         </div>
       )}
-      <div className="relative h-[360px] sm:h-[400px] lg:h-[440px]">
+      <div className="relative h-[400px] sm:h-[440px] lg:h-[480px]">
         {topStories.map((s, idx) => (
           <div
             key={idx}
@@ -66,16 +66,20 @@ export function HeroCarousel() {
                   ★ <EditText target={{ kind: "hero", index: idx, field: "tag" }} value={s.tag} />
                 </span>
                 <EditText as="h2" target={{ kind: "hero", index: idx, field: "title" }} value={s.title}
-                  className="headline hero-legible mt-4 text-[26px] sm:text-[34px] md:text-[44px] lg:text-[52px] text-ink block" />
+                  className="headline hero-legible mt-4 text-[22px] sm:text-[28px] md:text-[36px] lg:text-[42px] leading-[1.05] text-ink block line-clamp-3" />
                 <EditText as="p" target={{ kind: "hero", index: idx, field: "sub" }} value={s.sub}
-                  className="hero-legible mt-3 text-muted-foreground text-[13px] sm:text-[15px] max-w-md block" />
+                  className="hero-legible mt-3 text-muted-foreground text-[13px] sm:text-[15px] max-w-md block line-clamp-2" />
               </div>
-              <EditImage target={{ kind: "hero", index: idx }} className="absolute right-0 inset-y-0 w-1/2 hidden md:block">
-                <img src={s.img} alt="" className="h-full w-full object-contain object-bottom-right scale-110" />
-              </EditImage>
-              <EditImage target={{ kind: "hero", index: idx }} className="md:hidden absolute right-0 bottom-0 w-[42%] h-[70%] opacity-95">
-                <img src={s.img} alt="" className="h-full w-full object-contain object-[right_bottom]" />
-              </EditImage>
+              <div className="absolute right-0 inset-y-0 w-1/2 hidden md:block">
+                <EditImage target={{ kind: "hero", index: idx }} className="block h-full w-full">
+                  <img src={s.img} alt="" className="h-full w-full object-contain object-right-bottom" />
+                </EditImage>
+              </div>
+              <div className="md:hidden absolute right-0 bottom-0 w-[42%] h-[70%] opacity-95">
+                <EditImage target={{ kind: "hero", index: idx }} className="block h-full w-full">
+                  <img src={s.img} alt="" className="h-full w-full object-contain object-right-bottom" />
+                </EditImage>
+              </div>
             </div>
           </div>
         ))}

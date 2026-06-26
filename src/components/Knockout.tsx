@@ -7,7 +7,27 @@ import { useEdit } from "@/context/edit";
 import { EditImage } from "@/components/admin/Editable";
 import { Flag } from "@/components/Flag";
 import type { KnockoutTeam } from "@/lib/overrides";
-import { Loader2, Trophy, X, Upload } from "lucide-react";
+import { Loader2, X, Upload } from "lucide-react";
+
+const DEFAULT_TROPHY = "/mascots/cup-nobg.png";
+const DEFAULT_BG = "/mascots/background.png";
+
+/** The big glowing trophy that sits above the bracket — the real FIFA-style gold
+ *  cup-with-flame art, replaceable by the admin via the same upload pattern. */
+function TrophyHero({ img }: { img?: string | null }) {
+  return (
+    <div className="relative flex items-center justify-center h-60 sm:h-80 mb-1">
+      <div className="absolute h-44 w-44 sm:h-56 sm:w-56 rounded-full bg-gold/30 blur-2xl" aria-hidden />
+      <EditImage target={{ kind: "trophy" }} className="relative block">
+        <img
+          src={img || DEFAULT_TROPHY}
+          alt="World Cup trophy"
+          className="h-60 sm:h-80 w-auto object-contain drop-shadow-[0_0_32px_rgba(245,179,21,0.7)]"
+        />
+      </EditImage>
+    </div>
+  );
+}
 
 type KMatch = {
   home: string; away: string; homeReal: string; awayReal: string;
@@ -33,42 +53,30 @@ function stageOf(round = ""): typeof STAGES[number] | null {
   return null;
 }
 
-/** Labeled "Replace" button used inside the editor to set a team's happy/sad art. */
-function MoodUpload({ label, teamKey, mood, img }: { label: string; teamKey: string; mood: "happy" | "sad"; img?: string }) {
-  return (
-    <div className="flex flex-col items-center gap-1">
-      <EditImage target={{ kind: "knockoutTeam", key: teamKey, mood }} className="h-9 w-9 rounded-lg bg-white/10 overflow-hidden grid place-items-center block ring-1 ring-gold/40">
-        {img ? <img src={img} alt="" className="h-full w-full object-cover" /> : <Upload className="h-3.5 w-3.5 text-gold" />}
-      </EditImage>
-      <span className="text-[8px] font-display font-bold uppercase tracking-wide text-white/70">{label}</span>
-    </div>
-  );
-}
-
 /** One animal headshot card — rounded-square navy badge, gold-ringed circular
  *  photo on top, flag + name pill below; dimmed with a red X once eliminated.
- *  In edit mode, exposes per-team happy/sad image uploads and a name field. */
+ *  In edit mode, exposes a single image replace + a name field; the admin swaps
+ *  the photo's expression themselves as the result becomes known. */
 function Slot({
   teamKey, fallbackName, flag, defaultImg, result, overrideTeam,
 }: { teamKey: string; fallbackName: string; flag: string; defaultImg: string | null; result: "win" | "lose" | "pending"; overrideTeam?: KnockoutTeam }) {
   const { editing, onText } = useEdit();
   const eliminated = result === "lose";
   const name = overrideTeam?.name || fallbackName;
-  const img = result === "win" ? (overrideTeam?.happy || defaultImg) : result === "lose" ? (overrideTeam?.sad || defaultImg) : defaultImg;
+  const img = overrideTeam?.img || defaultImg;
 
   if (editing) {
     return (
-      <div className="flex flex-col items-center gap-1.5 w-20 sm:w-24 shrink-0 rounded-2xl bg-gradient-to-b from-white/10 to-white/[0.03] ring-1 ring-gold/50 p-2">
+      <div className="flex flex-col items-center gap-1.5 w-16 sm:w-20 shrink-0 rounded-2xl bg-gradient-to-b from-white/10 to-white/[0.03] ring-1 ring-gold/50 p-2">
         <input
           value={overrideTeam?.name ?? ""}
           placeholder={fallbackName || "Name"}
           onChange={(e) => onText({ kind: "knockoutTeamName", key: teamKey }, e.target.value)}
           className="w-full text-[9px] text-center bg-black/30 rounded px-1 py-0.5 text-white placeholder:text-white/40 outline-none focus:ring-1 focus:ring-gold"
         />
-        <div className="flex gap-1.5">
-          <MoodUpload label="Happy" teamKey={teamKey} mood="happy" img={overrideTeam?.happy} />
-          <MoodUpload label="Sad" teamKey={teamKey} mood="sad" img={overrideTeam?.sad} />
-        </div>
+        <EditImage target={{ kind: "knockoutTeam", key: teamKey }} className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-white/10 overflow-hidden grid place-items-center block ring-2 ring-gold/60">
+          {img ? <img src={img} alt="" className="h-full w-full object-cover object-top" /> : <Upload className="h-3.5 w-3.5 text-gold" />}
+        </EditImage>
       </div>
     );
   }
@@ -157,14 +165,21 @@ export function Knockout() {
 
   const bg = overrides.knockout;
   const knockoutTeams = overrides.knockoutTeams || {};
+  // Dim the photo heavily — it's ambience behind the cards, not something that
+  // should compete with the team art for attention.
   const bgStyle: React.CSSProperties = bg?.img
     ? {
-        backgroundImage: `linear-gradient(180deg, rgba(11,16,28,0.7), rgba(11,16,28,0.92)), url(${bg.img})`,
+        backgroundImage: `linear-gradient(180deg, rgba(8,12,22,0.82), rgba(8,12,22,0.93)), url(${bg.img})`,
         backgroundSize: `${bg.zoom || 100}%`,
         backgroundPosition: `${bg.x ?? 50}% ${bg.y ?? 50}%`,
         backgroundRepeat: "no-repeat",
       }
-    : { background: "radial-gradient(circle at 50% 0%, #182238, #0B101C 70%)" };
+    : {
+        backgroundImage: `linear-gradient(180deg, rgba(8,12,22,0.82), rgba(8,12,22,0.93)), url(${DEFAULT_BG})`,
+        backgroundSize: "cover",
+        backgroundPosition: "50% 35%",
+        backgroundRepeat: "no-repeat",
+      };
 
   // Always show the full bracket shape; empty slots stay TBD until the API
   // reports a real fixture for that stage.
@@ -200,6 +215,7 @@ export function Knockout() {
           <div className="text-center mb-2">
             <span className="headline text-xl sm:text-3xl text-gold tracking-wide">Animals World Cup 2026</span>
           </div>
+          <TrophyHero img={overrides.trophy} />
           <div className="flex items-center justify-center gap-2 text-[10px] sm:text-xs font-display font-semibold uppercase tracking-widest text-white/60 mb-6">
             <span>Round of 16</span><span className="text-gold">•</span><span>Quarter-Finals</span><span className="text-gold">•</span><span>Semi-Finals</span>
           </div>
@@ -207,7 +223,7 @@ export function Knockout() {
             <div className="grid place-items-center py-10 text-white/70"><Loader2 className="h-6 w-6 animate-spin" /></div>
           ) : (
             <div className="overflow-x-auto">
-              <div className="flex items-center justify-center gap-1 sm:gap-3 min-w-[640px] sm:min-w-0">
+              <div className="flex items-center justify-between gap-1 sm:gap-3 min-w-[640px] w-full">
                 <BracketColumn matches={r16L} mirror={false} knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={qfL} mirror={false} knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={sfL} mirror={false} knockoutTeams={knockoutTeams} />
@@ -215,13 +231,7 @@ export function Knockout() {
                 <div className="flex flex-col items-center gap-3 px-2 sm:px-4 shrink-0">
                   <span className="eyebrow text-gold">Final</span>
                   <Slot teamKey={final.homeKey} fallbackName={final.home} flag={final.homeFlag} defaultImg={final.homeImg} result={finalHomeResult} overrideTeam={knockoutTeams[final.homeKey]} />
-                  <EditImage target={{ kind: "trophy" }} className="block rounded-full" round>
-                    {overrides.trophy ? (
-                      <img src={overrides.trophy} alt="World Cup trophy" className="h-12 w-12 sm:h-16 sm:w-16 object-contain drop-shadow-[0_0_12px_rgba(245,179,21,0.55)]" />
-                    ) : (
-                      <Trophy className="h-8 w-8 sm:h-10 sm:w-10 text-gold" />
-                    )}
-                  </EditImage>
+                  <span aria-hidden className="h-6 w-px bg-gold/40" />
                   <Slot teamKey={final.awayKey} fallbackName={final.away} flag={final.awayFlag} defaultImg={final.awayImg} result={finalAwayResult} overrideTeam={knockoutTeams[final.awayKey]} />
                 </div>
 
