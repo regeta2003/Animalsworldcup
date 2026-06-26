@@ -13,13 +13,14 @@ type KMatch = {
   home: string; away: string; homeReal: string; awayReal: string;
   homeFlag: string; awayFlag: string; hs: number; as: number; played: boolean;
   homeImg: string | null; awayImg: string | null;
+  homeKey: string; awayKey: string;
 };
 
 const STAGES = ["Round of 16", "Quarter-finals", "Semi-finals", "Final"] as const;
 const STAGE_SLOTS: Record<typeof STAGES[number], number> = {
   "Round of 16": 8, "Quarter-finals": 4, "Semi-finals": 2, "Final": 1,
 };
-const EMPTY_MATCH: KMatch = {
+const EMPTY_MATCH: Omit<KMatch, "homeKey" | "awayKey"> = {
   home: "", away: "", homeReal: "", awayReal: "", homeFlag: "", awayFlag: "",
   hs: 0, as: 0, played: false, homeImg: null, awayImg: null,
 };
@@ -32,14 +33,14 @@ function stageOf(round = ""): typeof STAGES[number] | null {
   return null;
 }
 
-/** Tiny labeled upload square used inside the editor to set a team's happy/sad art. */
+/** Labeled "Replace" button used inside the editor to set a team's happy/sad art. */
 function MoodUpload({ label, teamKey, mood, img }: { label: string; teamKey: string; mood: "happy" | "sad"; img?: string }) {
   return (
-    <div className="flex flex-col items-center gap-0.5">
-      <EditImage target={{ kind: "knockoutTeam", key: teamKey, mood }} className="h-7 w-7 rounded-lg bg-white/10 overflow-hidden grid place-items-center block">
-        {img ? <img src={img} alt="" className="h-full w-full object-cover" /> : <Upload className="h-3 w-3 text-white/50" />}
+    <div className="flex flex-col items-center gap-1">
+      <EditImage target={{ kind: "knockoutTeam", key: teamKey, mood }} className="h-9 w-9 rounded-lg bg-white/10 overflow-hidden grid place-items-center block ring-1 ring-gold/40">
+        {img ? <img src={img} alt="" className="h-full w-full object-cover" /> : <Upload className="h-3.5 w-3.5 text-gold" />}
       </EditImage>
-      <span className="text-[7px] uppercase tracking-wide text-white/50">{label}</span>
+      <span className="text-[8px] font-display font-bold uppercase tracking-wide text-white/70">{label}</span>
     </div>
   );
 }
@@ -55,7 +56,7 @@ function Slot({
   const name = overrideTeam?.name || fallbackName;
   const img = result === "win" ? (overrideTeam?.happy || defaultImg) : result === "lose" ? (overrideTeam?.sad || defaultImg) : defaultImg;
 
-  if (editing && teamKey) {
+  if (editing) {
     return (
       <div className="flex flex-col items-center gap-1.5 w-20 sm:w-24 shrink-0 rounded-2xl bg-gradient-to-b from-white/10 to-white/[0.03] ring-1 ring-gold/50 p-2">
         <input
@@ -96,8 +97,8 @@ function SlotPair({ m, mirror, knockoutTeams }: { m: KMatch; mirror: boolean; kn
   const awayResult: "win" | "lose" | "pending" = !m.played ? "pending" : m.as > m.hs ? "win" : "lose";
   return (
     <div className={`relative flex flex-col gap-3 py-1 ${mirror ? "pr-3 sm:pr-4" : "pl-3 sm:pl-4"}`}>
-      <Slot teamKey={m.homeReal} fallbackName={m.home} flag={m.homeFlag} defaultImg={m.homeImg} result={homeResult} overrideTeam={knockoutTeams[m.homeReal]} />
-      <Slot teamKey={m.awayReal} fallbackName={m.away} flag={m.awayFlag} defaultImg={m.awayImg} result={awayResult} overrideTeam={knockoutTeams[m.awayReal]} />
+      <Slot teamKey={m.homeKey} fallbackName={m.home} flag={m.homeFlag} defaultImg={m.homeImg} result={homeResult} overrideTeam={knockoutTeams[m.homeKey]} />
+      <Slot teamKey={m.awayKey} fallbackName={m.away} flag={m.awayFlag} defaultImg={m.awayImg} result={awayResult} overrideTeam={knockoutTeams[m.awayKey]} />
       <span
         aria-hidden
         className={`absolute top-1/2 ${mirror ? "right-0" : "left-0"} h-[calc(100%-1.5rem)] w-3 sm:w-4 border-gold/40 -translate-y-1/2 ${mirror ? "border-r-2 border-t-2 border-b-2 rounded-r-md" : "border-l-2 border-t-2 border-b-2 rounded-l-md"}`}
@@ -170,7 +171,11 @@ export function Knockout() {
   const slotsFor = (stage: typeof STAGES[number]): KMatch[] => {
     const real = byStage[stage] || [];
     const total = STAGE_SLOTS[stage];
-    return Array.from({ length: total }, (_, i) => real[i] || EMPTY_MATCH);
+    return Array.from({ length: total }, (_, i) => ({
+      ...(real[i] || EMPTY_MATCH),
+      homeKey: `${stage}#${i}#home`,
+      awayKey: `${stage}#${i}#away`,
+    }));
   };
   const half = (list: KMatch[]) => [list.slice(0, list.length / 2), list.slice(list.length / 2)];
 
@@ -209,7 +214,7 @@ export function Knockout() {
 
                 <div className="flex flex-col items-center gap-3 px-2 sm:px-4 shrink-0">
                   <span className="eyebrow text-gold">Final</span>
-                  <Slot teamKey={final.homeReal} fallbackName={final.home} flag={final.homeFlag} defaultImg={final.homeImg} result={finalHomeResult} overrideTeam={knockoutTeams[final.homeReal]} />
+                  <Slot teamKey={final.homeKey} fallbackName={final.home} flag={final.homeFlag} defaultImg={final.homeImg} result={finalHomeResult} overrideTeam={knockoutTeams[final.homeKey]} />
                   <EditImage target={{ kind: "trophy" }} className="block rounded-full" round>
                     {overrides.trophy ? (
                       <img src={overrides.trophy} alt="World Cup trophy" className="h-12 w-12 sm:h-16 sm:w-16 object-contain drop-shadow-[0_0_12px_rgba(245,179,21,0.55)]" />
@@ -217,7 +222,7 @@ export function Knockout() {
                       <Trophy className="h-8 w-8 sm:h-10 sm:w-10 text-gold" />
                     )}
                   </EditImage>
-                  <Slot teamKey={final.awayReal} fallbackName={final.away} flag={final.awayFlag} defaultImg={final.awayImg} result={finalAwayResult} overrideTeam={knockoutTeams[final.awayReal]} />
+                  <Slot teamKey={final.awayKey} fallbackName={final.away} flag={final.awayFlag} defaultImg={final.awayImg} result={finalAwayResult} overrideTeam={knockoutTeams[final.awayKey]} />
                 </div>
 
                 <BracketColumn matches={sfR} mirror knockoutTeams={knockoutTeams} />
