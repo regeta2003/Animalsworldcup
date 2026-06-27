@@ -10,9 +10,15 @@ import type { KnockoutTeam } from "@/lib/overrides";
 import { Loader2, X, Upload } from "lucide-react";
 
 const DEFAULT_TROPHY = "/mascots/cup-nobg.png";
-// Temporary animal art for bracket slots with no fixture yet — keeps the
-// bracket looking populated until the admin uploads real team photos.
-const PLACEHOLDER_IMGS = ["/mascots/germany.png", "/mascots/ivory.png", "/mascots/ecuador.png", "/mascots/curacao.png", "/mascots/Turkeylost.png"];
+// Transparent-background mascot art — the flag-coloured circle shows through
+// around the cutout until the admin uploads a real per-team photo.
+const PLACEHOLDER_IMGS = [
+  "/mascots/no%20bg/germany-removebg-preview.png",
+  "/mascots/no%20bg/ivory-removebg-preview.png",
+  "/mascots/no%20bg/ecuador-removebg-preview.png",
+  "/mascots/no%20bg/curacao-removebg-.png",
+  "/mascots/no%20bg/Turkeylost-removebg-preview.png",
+];
 const placeholderImg = (i: number) => PLACEHOLDER_IMGS[i % PLACEHOLDER_IMGS.length];
 // Random real nations (with their animal nickname + flag) to fill empty bracket
 // slots before fixtures exist — purely cosmetic, admin overrides replace them.
@@ -86,12 +92,10 @@ function Slot({
     <div className={`flex flex-col items-center gap-1.5 w-16 sm:w-20 shrink-0 transition-transform hover:-translate-y-0.5 ${eliminated ? "opacity-70" : ""}`}>
       <div className="relative">
         <div
-          className={`relative h-11 w-11 sm:h-14 sm:w-14 rounded-full overflow-hidden ring-[2.5px] p-[3px] ${eliminated ? "ring-border grayscale" : "ring-gold shadow-[0_4px_14px_-2px_rgba(245,179,21,0.55)]"} shadow-sm`}
+          className={`relative h-11 w-11 sm:h-14 sm:w-14 rounded-full overflow-hidden ring-[2.5px] grid place-items-center ${eliminated ? "ring-border grayscale" : "ring-gold shadow-[0_4px_14px_-2px_rgba(245,179,21,0.55)]"} shadow-sm`}
           style={{ background: bg }}
         >
-          <div className="h-full w-full rounded-full overflow-hidden bg-white grid place-items-center">
-            {img ? <img src={img} alt="" className="h-full w-full object-cover object-top" /> : <span className="text-muted-foreground text-xs">?</span>}
-          </div>
+          {img ? <img src={img} alt="" className="h-full w-full object-contain p-1" /> : <span className="text-white text-xs">?</span>}
         </div>
         {eliminated ? (
           <span className="absolute -top-0.5 -right-0.5 h-4 w-4 rounded-full bg-live grid place-items-center ring-2 ring-white">
@@ -188,9 +192,9 @@ export function Knockout() {
   const knockoutTeams = overrides.knockoutTeams || {};
 
   // Always show the full bracket shape; empty slots stay TBD until the API
-  // reports a real fixture for that stage, but get a random team name, flag and
-  // temporary animal art so the bracket looks populated rather than a wall of
-  // "?" placeholders. Purely cosmetic — the admin overrides replace it per slot.
+  // reports a real fixture for that stage, but get a random team name, flag,
+  // and a transparent-cutout mascot photo (flag-coloured circle shows through)
+  // so the bracket looks populated rather than a wall of "?" placeholders.
   let phIdx = 0;
   const slotsFor = (stage: typeof STAGES[number]): KMatch[] => {
     const real = byStage[stage] || [];
