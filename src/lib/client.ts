@@ -15,3 +15,13 @@ export async function fetchOverrides() {
   if (!r.ok) throw new Error(`overrides ${r.status}`);
   return r.json();
 }
+
+export async function submitContact(data: { name: string; email: string; message: string }) {
+  const r = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || `contact ${r.status}`);
+  return r.json();
+}

@@ -49,8 +49,8 @@
 }
 
 :root {
-  --background: oklch(1 0 0);                   /* #FFFFFF */
-  --soft: oklch(1 0 0);               /* #FFFFFF */
+  --background: #EFEADC;                        /* warm khaki page backdrop */
+  --soft: #EFEADC;
   --foreground: oklch(0.18 0.02 260);           /* near #11161F */
   --ink: oklch(0.18 0.02 260);
   --card: oklch(1 0 0);
@@ -63,7 +63,7 @@
   --primary-foreground: oklch(0.99 0 0);
   --primary-deep: oklch(0.46 0.15 148);
 
-  --gold: oklch(0.81 0.16 82);                  /* #F5B315 */
+  --gold: #F2C40C;                              /* brand yellow */
   --gold-foreground: oklch(0.2 0.03 80);
 
   --secondary: oklch(0.972 0.003 247);

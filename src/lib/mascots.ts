@@ -121,3 +121,23 @@ export const codeFor = (name?: string | null): string =>
 
 export const flagUrl = (code?: string): string =>
   code ? `https://flagcdn.com/${code}.svg` : "";
+
+// Primary flag colour per nation — used as the backdrop behind team art so the
+// bracket/leaderboard cards read as "that team's colour" at a glance.
+export const FLAG_COLOR: Record<string, string> = {
+  "Mexico": "#006341", "South Korea": "#CD2E3A", "Czechia": "#11457E", "Czech Republic": "#11457E", "South Africa": "#007749",
+  "Canada": "#FF0000", "Bosnia & Herzegovina": "#002395", "Qatar": "#8D1B3D", "Switzerland": "#FF0000",
+  "Brazil": "#009C3B", "Morocco": "#C1272D", "Haiti": "#00209F", "Scotland": "#0065BD",
+  "USA": "#3C3B6E", "Paraguay": "#0038A8", "Australia": "#00008B", "Türkiye": "#E30A17", "Turkey": "#E30A17",
+  "Germany": "#1A1A1A", "Curaçao": "#0B6BCB", "Curacao": "#0B6BCB", "Ivory Coast": "#F77F00", "Côte d'Ivoire": "#F77F00", "Ecuador": "#FFD100",
+  "Netherlands": "#FF6C00", "Japan": "#BC002D", "Sweden": "#006AA7", "Tunisia": "#E70013",
+  "Belgium": "#ED2939", "Egypt": "#CE1126", "Iran": "#239F40", "New Zealand": "#00247D",
+  "Spain": "#AA151B", "Cape Verde Islands": "#003893", "Cape Verde": "#003893", "Saudi Arabia": "#006C35", "Uruguay": "#5C88DA",
+  "France": "#0055A4", "Senegal": "#00853F", "Iraq": "#CE1126", "Norway": "#BA0C2F",
+  "Argentina": "#75AADB", "Algeria": "#006233", "Austria": "#ED2939", "Jordan": "#007A3D",
+  "Portugal": "#006600", "Congo DR": "#007FFF", "DR Congo": "#007FFF", "Uzbekistan": "#0099B5", "Colombia": "#FCD116",
+  "England": "#CE1124", "Croatia": "#FF0000", "Ghana": "#006B3F", "Panama": "#DA121A",
+};
+
+export const flagColorFor = (name?: string | null): string =>
+  (name && FLAG_COLOR[name.trim()]) || colorFor(name || "");
