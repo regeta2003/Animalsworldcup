@@ -38,12 +38,12 @@ type KMatch = {
   homeKey: string; awayKey: string;
 };
 
-const STAGES = ["Round of 16", "Quarter-finals", "Semi-finals", "Final"] as const;
+const STAGES = ["Round of 32", "Round of 16", "Quarter-finals", "Semi-finals", "Final"] as const;
 const STAGE_SLOTS: Record<typeof STAGES[number], number> = {
-  "Round of 16": 8, "Quarter-finals": 4, "Semi-finals": 2, "Final": 1,
+  "Round of 32": 16, "Round of 16": 8, "Quarter-finals": 4, "Semi-finals": 2, "Final": 1,
 };
 const STAGE_LABEL: Record<typeof STAGES[number], string> = {
-  "Round of 16": "Round of 16", "Quarter-finals": "Quarter Finals",
+  "Round of 32": "Round of 32", "Round of 16": "Round of 16", "Quarter-finals": "Quarter Finals",
   "Semi-finals": "Semi Finals", "Final": "Final",
 };
 const EMPTY_MATCH: Omit<KMatch, "homeKey" | "awayKey"> = {
@@ -52,6 +52,7 @@ const EMPTY_MATCH: Omit<KMatch, "homeKey" | "awayKey"> = {
 };
 
 function stageOf(round = ""): typeof STAGES[number] | null {
+  if (/round of 32/i.test(round)) return "Round of 32";
   if (/round of 16/i.test(round)) return "Round of 16";
   if (/quarter/i.test(round)) return "Quarter-finals";
   if (/semi/i.test(round)) return "Semi-finals";
@@ -218,6 +219,7 @@ export function Knockout() {
   };
   const half = (list: KMatch[]) => [list.slice(0, list.length / 2), list.slice(list.length / 2)];
 
+  const [r32L, r32R] = half(slotsFor("Round of 32"));
   const [r16L, r16R] = half(slotsFor("Round of 16"));
   const [qfL, qfR] = half(slotsFor("Quarter-finals"));
   const [sfL, sfR] = half(slotsFor("Semi-finals"));
@@ -236,8 +238,9 @@ export function Knockout() {
           <div className="grid place-items-center py-10 text-muted-foreground"><Loader2 className="h-6 w-6 animate-spin" /></div>
         ) : (
           <div className="overflow-x-auto">
-            <div className="min-w-[760px] w-full">
-              <div className="grid grid-cols-[1fr_1fr_1fr_auto_1fr_1fr_1fr] gap-1 sm:gap-3 mb-1">
+            <div className="min-w-[920px] w-full">
+              <div className="grid grid-cols-[1fr_1fr_1fr_1fr_auto_1fr_1fr_1fr_1fr] gap-1 sm:gap-3 mb-1">
+                <ColumnHeader label={STAGE_LABEL["Round of 32"]} />
                 <ColumnHeader label={STAGE_LABEL["Round of 16"]} />
                 <ColumnHeader label={STAGE_LABEL["Quarter-finals"]} />
                 <ColumnHeader label={STAGE_LABEL["Semi-finals"]} />
@@ -245,8 +248,10 @@ export function Knockout() {
                 <ColumnHeader label={STAGE_LABEL["Semi-finals"]} />
                 <ColumnHeader label={STAGE_LABEL["Quarter-finals"]} />
                 <ColumnHeader label={STAGE_LABEL["Round of 16"]} />
+                <ColumnHeader label={STAGE_LABEL["Round of 32"]} />
               </div>
               <div className="flex items-center justify-between gap-1 sm:gap-3 w-full mt-24 sm:mt-28">
+                <BracketColumn matches={r32L} mirror={false} knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={r16L} mirror={false} knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={qfL} mirror={false} knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={sfL} mirror={false} knockoutTeams={knockoutTeams} />
@@ -270,6 +275,7 @@ export function Knockout() {
                 <BracketColumn matches={sfR} mirror knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={qfR} mirror knockoutTeams={knockoutTeams} />
                 <BracketColumn matches={r16R} mirror knockoutTeams={knockoutTeams} />
+                <BracketColumn matches={r32R} mirror knockoutTeams={knockoutTeams} />
               </div>
             </div>
           </div>
