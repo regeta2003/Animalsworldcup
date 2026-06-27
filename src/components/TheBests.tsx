@@ -45,7 +45,7 @@ export function TheBests() {
         ) : (
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             {top3.map((s, idx) => (
-              <div key={s.name} className="relative rounded-2xl bg-white ring-1 ring-gold/40 pt-6 pb-3 px-1.5 flex flex-col items-center text-center shadow-sm">
+              <div key={s.name} className="relative rounded-2xl bg-white ring-1 ring-gold/40 pt-6 pb-3 px-1.5 flex flex-col items-center text-center shadow-sm transition-transform duration-200 hover:-translate-y-1 hover:shadow-md">
                 <span className={`absolute top-0 left-0 px-2.5 py-1 rounded-tl-2xl rounded-br-lg text-[10px] font-display font-extrabold ${RANK_RIBBON[idx]}`}>
                   {RANK_LABEL[idx]}
                 </span>
@@ -63,7 +63,7 @@ export function TheBests() {
           </div>
         )}
       </div>
-      <Link to="/statistics" className="mt-4 w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 transition">
+      <Link to="/statistics" className="mt-4 w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 hover:scale-[1.02] active:scale-95 transition">
         View All Players →
       </Link>
     </section>

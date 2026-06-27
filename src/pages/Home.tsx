@@ -19,13 +19,23 @@ export default function Home() {
   return (
     <PageShell>
       <div className="space-y-8">
-        <Knockout />
+        <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 fill-mode-both">
+          <Knockout />
+        </div>
         <section>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <TheBests />
-            <MatchesPanel />
-            <FollowUs />
-            <ContactForm />
+            <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-100 fill-mode-both">
+              <TheBests />
+            </div>
+            <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-200 fill-mode-both">
+              <MatchesPanel />
+            </div>
+            <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-300 fill-mode-both">
+              <FollowUs />
+            </div>
+            <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-700 delay-[400ms] fill-mode-both">
+              <ContactForm />
+            </div>
           </div>
         </section>
       </div>

@@ -138,6 +138,10 @@
 @keyframes marquee-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @utility fade-in { animation: marquee-fade 420ms ease both; }
 
+/* Gentle vertical bob for the trophy — paired with its pulsing glow */
+@keyframes trophy-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+@utility animate-float { animation: trophy-float 3.2s ease-in-out infinite; }
+
 /* Live match card — red background so in-play games stand out (Farhad's request) */
 @utility card-live {
   background: linear-gradient(135deg, var(--color-live), color-mix(in oklab, var(--color-live) 62%, #000));

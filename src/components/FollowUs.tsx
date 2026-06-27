@@ -29,7 +29,7 @@ export function FollowUs() {
         </div>
       </div>
       <a href={IG} target="_blank" rel="noopener noreferrer"
-        className="mt-3 w-full inline-flex items-center justify-center gap-1.5 bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 transition">
+        className="mt-3 w-full inline-flex items-center justify-center gap-1.5 bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 hover:scale-[1.02] active:scale-95 transition">
         <Instagram className="h-3.5 w-3.5" /> Follow Us
       </a>
     </section>

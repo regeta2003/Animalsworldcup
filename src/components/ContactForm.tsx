@@ -48,7 +48,7 @@ export function ContactForm() {
         )}
         <button
           type="submit" disabled={status === "sending"}
-          className="w-full inline-flex items-center justify-center gap-1.5 bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 transition disabled:opacity-60"
+          className="w-full inline-flex items-center justify-center gap-1.5 bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 hover:scale-[1.02] active:scale-95 transition disabled:opacity-60"
         >
           {status === "sending" ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : "Send Message"}
         </button>

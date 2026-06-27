@@ -57,7 +57,7 @@ export function MatchesPanel() {
           show.map((m, i) => <MatchRow key={i} m={m} />)
         )}
       </div>
-      <Link to="/schedule" className="mt-4 w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 transition">
+      <Link to="/schedule" className="mt-4 w-full inline-flex items-center justify-center bg-gold text-gold-foreground py-2 rounded-xl font-display font-bold uppercase tracking-wider text-xs hover:brightness-95 hover:scale-[1.02] active:scale-95 transition">
         View Full Schedule →
       </Link>
     </section>

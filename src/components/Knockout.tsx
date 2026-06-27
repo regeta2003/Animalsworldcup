@@ -89,7 +89,7 @@ function Slot({
   }
 
   return (
-    <div className={`flex flex-col items-center gap-1.5 w-16 sm:w-20 shrink-0 transition-transform hover:-translate-y-0.5 ${eliminated ? "opacity-70" : ""}`}>
+    <div className={`flex flex-col items-center gap-1.5 w-16 sm:w-20 shrink-0 transition-transform duration-200 hover:-translate-y-0.5 hover:scale-110 ${eliminated ? "opacity-70" : ""}`}>
       <div className="relative">
         <div
           className={`relative h-11 w-11 sm:h-14 sm:w-14 rounded-full overflow-hidden ring-[2.5px] grid place-items-center ${eliminated ? "ring-border grayscale" : "ring-gold shadow-[0_4px_14px_-2px_rgba(245,179,21,0.55)]"} shadow-sm`}
@@ -258,7 +258,7 @@ export function Knockout() {
                       <img
                         src={overrides.trophy || DEFAULT_TROPHY}
                         alt="World Cup trophy"
-                        className="relative h-20 sm:h-30 w-auto object-contain drop-shadow-[0_0_18px_rgba(245,179,21,0.85)]"
+                        className="relative h-20 sm:h-30 w-auto object-contain drop-shadow-[0_0_18px_rgba(245,179,21,0.85)] animate-float"
                       />
                     </EditImage>
                   </div>
