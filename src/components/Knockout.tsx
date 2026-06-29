@@ -192,17 +192,43 @@ export function Knockout() {
 
   const knockoutTeams = overrides.knockoutTeams || {};
 
+  // Winner of a played match — used to auto-advance a team into its slot in
+  // the next round whenever the API hasn't published that fixture yet.
+  const winnerOf = (m: KMatch) => {
+    if (!m.played || m.hs === m.as) return null;
+    return m.hs > m.as
+      ? { name: m.home, real: m.homeReal, flag: m.homeFlag, img: m.homeImg }
+      : { name: m.away, real: m.awayReal, flag: m.awayFlag, img: m.awayImg };
+  };
+
   // Always show the full bracket shape; empty slots stay TBD until the API
   // reports a real fixture for that stage, but get a random team name, flag,
   // and a transparent-cutout mascot photo (flag-coloured circle shows through)
   // so the bracket looks populated rather than a wall of "?" placeholders.
   let phIdx = 0;
-  const slotsFor = (stage: typeof STAGES[number]): KMatch[] => {
+  const slotsFor = (stage: typeof STAGES[number], prev?: KMatch[]): KMatch[] => {
     const real = byStage[stage] || [];
     const total = STAGE_SLOTS[stage];
     return Array.from({ length: total }, (_, i) => {
       const r = real[i];
       if (r) return { ...r, homeKey: `${stage}#${i}#home`, awayKey: `${stage}#${i}#away` };
+
+      const wHome = prev && winnerOf(prev[2 * i]);
+      const wAway = prev && winnerOf(prev[2 * i + 1]);
+      if (wHome || wAway) {
+        const phHome = wHome ? null : placeholderTeam(phIdx++);
+        const phAway = wAway ? null : placeholderTeam(phIdx++);
+        return {
+          ...EMPTY_MATCH,
+          home: wHome?.name ?? phHome!.name, away: wAway?.name ?? phAway!.name,
+          homeReal: wHome?.real ?? phHome!.country, awayReal: wAway?.real ?? phAway!.country,
+          homeFlag: wHome?.flag ?? phHome!.flag, awayFlag: wAway?.flag ?? phAway!.flag,
+          homeImg: wHome?.img ?? null, awayImg: wAway?.img ?? null,
+          homeKey: `${stage}#${i}#home`,
+          awayKey: `${stage}#${i}#away`,
+        };
+      }
+
       const home = placeholderTeam(phIdx++);
       const away = placeholderTeam(phIdx++);
       return {
@@ -219,11 +245,16 @@ export function Knockout() {
   };
   const half = (list: KMatch[]) => [list.slice(0, list.length / 2), list.slice(list.length / 2)];
 
-  const [r32L, r32R] = half(slotsFor("Round of 32"));
-  const [r16L, r16R] = half(slotsFor("Round of 16"));
-  const [qfL, qfR] = half(slotsFor("Quarter-finals"));
-  const [sfL, sfR] = half(slotsFor("Semi-finals"));
-  const final = slotsFor("Final")[0];
+  const r32 = slotsFor("Round of 32");
+  const r16 = slotsFor("Round of 16", r32);
+  const qf = slotsFor("Quarter-finals", r16);
+  const sf = slotsFor("Semi-finals", qf);
+  const final = slotsFor("Final", sf)[0];
+
+  const [r32L, r32R] = half(r32);
+  const [r16L, r16R] = half(r16);
+  const [qfL, qfR] = half(qf);
+  const [sfL, sfR] = half(sf);
   const finalHomeResult: "win" | "lose" | "pending" = !final.played ? "pending" : final.hs > final.as ? "win" : "lose";
   const finalAwayResult: "win" | "lose" | "pending" = !final.played ? "pending" : final.as > final.hs ? "win" : "lose";
 
